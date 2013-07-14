@@ -64,4 +64,31 @@ public class PieceViewTest {
 		assertThat("centre", newCentre, is(plankCentre));
 	}
 
+	@Test
+	public void snapToNonCentre() {
+		// SETUP
+		Vector2 oldCentre = new Vector2(200, 100);
+		float radius = 10;
+		Vector2 plankCentre = new Vector2(300, 100);
+		float width = 25;
+		Vector2 expectedCentre = plankCentre.cpy().add(0, width);
+		Vector2 target = expectedCentre.cpy().add(0, -radius/2);
+
+		Piece piece = new Piece(PieceColour.RED);
+		Plank plank = 
+				new Plank(PieceColour.RED, PieceColour.BLUE, PieceColour.GREEN);
+		PieceView pieceView = 
+				new PieceView(piece, oldCentre, radius);
+		PlankView plankView = 
+				new PlankView(plank, plankCentre, width);
+		
+		// EXEC
+		pieceView.addPossibleDestination(plankView);
+		pieceView.dragTo(target);
+		Vector2 newCentre = pieceView.getCentre();
+		
+		// VERIFY
+		assertThat("centre", newCentre, is(expectedCentre));
+	}
+
 }

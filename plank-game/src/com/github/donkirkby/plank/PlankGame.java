@@ -1,5 +1,9 @@
 package com.github.donkirkby.plank;
 
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.List;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
@@ -7,7 +11,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.github.donkirkby.plank.model.Piece;
@@ -18,32 +21,39 @@ import com.github.donkirkby.plank.view.PlankView;
 
 public class PlankGame implements ApplicationListener {
 	private OrthographicCamera camera;
-	Plank plank;
 	PlankView plankView;
-	Piece piece;
-	PieceView pieceView;
+	List<PieceView> pieceViews;
 	private SpriteBatch batch;
 	TextureAtlas atlas;
 	TextureRegion plankImage;
-	TextureRegion pieceImage;
+	EnumMap<PieceColour, TextureRegion> pieceImages;
 
 	@Override
 	public void create() {
 		atlas = new TextureAtlas(Gdx.files.internal("plank.pack"));
-		pieceImage = atlas.findRegion("circle-red");
+		pieceImages = new EnumMap<PieceColour, TextureRegion>(PieceColour.class);
+		pieceImages.put(PieceColour.RED, atlas.findRegion("circle-red"));
+		pieceImages.put(PieceColour.GREEN, atlas.findRegion("circle-green"));
 		plankImage = atlas.findRegion("plank-rgb");
 
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
 		batch = new SpriteBatch();
 		
-		piece = new Piece(PieceColour.RED);
-		pieceView = new PieceView(piece, new Vector2(200/2 - 40/2, 480/2), 20);
+		pieceViews = Arrays.asList(
+				new PieceView(
+						new Piece(PieceColour.RED), 
+						new Vector2(200/2 - 40/2, 480/2), 20),
+				new PieceView(
+						new Piece(PieceColour.GREEN), 
+						new Vector2(300/2 - 40/2, 480/2), 20));
 
-		plank = new Plank(PieceColour.RED, PieceColour.GREEN, PieceColour.BLUE);
+		Plank plank = new Plank(PieceColour.RED, PieceColour.GREEN, PieceColour.BLUE);
 		plankView = new PlankView(plank, new Vector2(800 / 2 - 50 / 2, 100), 50);
 		
-		pieceView.addPossibleDestination(plankView);
+		for (PieceView pieceView : pieceViews) {
+			pieceView.addPossibleDestination(plankView);
+		}
 	}
 
 	@Override
@@ -61,14 +71,21 @@ public class PlankGame implements ApplicationListener {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		batch.draw(plankImage, plankView.getLeft(), plankView.getBottom());
-		batch.draw(pieceImage, pieceView.getLeft(), pieceView.getBottom());
+		for (PieceView pieceView : pieceViews) {
+			TextureRegion pieceImage = 
+					pieceImages.get(pieceView.getPiece().getColour());
+			batch.draw(pieceImage, pieceView.getLeft(), pieceView.getBottom());
+		}
 		batch.end();
-		if (Gdx.input.isTouched()) {
-			Vector3 touchPos3 = new Vector3();
-			touchPos3.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-			camera.unproject(touchPos3);
-			Vector2 touchPos = new Vector2(touchPos3.x, touchPos3.y);
-			pieceView.dragTo(touchPos);
+		for (int i = 0; i < pieceViews.size(); i++) {
+			PieceView pieceView = pieceViews.get(i);
+			if (Gdx.input.isTouched(i)) {
+				Vector3 touchPos3 = new Vector3();
+				touchPos3.set(Gdx.input.getX(i), Gdx.input.getY(i), 0);
+				camera.unproject(touchPos3);
+				Vector2 touchPos = new Vector2(touchPos3.x, touchPos3.y);
+				pieceView.dragTo(touchPos);
+			}
 		}
 	}
 

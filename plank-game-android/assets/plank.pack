@@ -5,9 +5,16 @@ filter: Nearest,Nearest
 repeat: none
 plank-rgb
   rotate: false
-  xy: 1, 43
+  xy: 1, 85
   size: 50, 150
   orig: 50, 150
+  offset: 0, 0
+  index: -1
+circle-green
+  rotate: false
+  xy: 1, 43
+  size: 40, 40
+  orig: 40, 40
   offset: 0, 0
   index: -1
 circle-red

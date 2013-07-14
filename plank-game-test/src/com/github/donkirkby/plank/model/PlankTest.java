@@ -72,4 +72,21 @@ public class PlankTest {
 		assertThat("different colour match", isDifferentColourMatch, is(false));
 	}
 
+	@Test
+	public void indexOf() {
+		// SETUP
+		Piece redPiece = new Piece(PieceColour.RED);
+		Piece greenPiece = new Piece(PieceColour.GREEN);
+		Plank plank = 
+				new Plank(PieceColour.RED, PieceColour.GREEN, PieceColour.BLUE);
+		
+		// EXEC
+		int redIndex = plank.indexOf(redPiece);
+		int greenIndex = plank.indexOf(greenPiece);
+		
+		// VERIFY
+		assertThat("index", redIndex, is(0));
+		assertThat("index", greenIndex, is(1));
+	}
+
 }

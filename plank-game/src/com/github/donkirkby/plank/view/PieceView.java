@@ -22,8 +22,7 @@ public class PieceView {
 	}
 
 	public void dragTo(Vector2 target) {
-		Vector2 destinationPosition = 
-				destination.getPosition(piece.getColour());
+		Vector2 destinationPosition = destination.getPosition(getPiece());
 		if (target.dst2(destinationPosition) < radius2) {
 			centre.set(destinationPosition);
 		}
@@ -46,6 +45,10 @@ public class PieceView {
 	
 	public float getBottom() {
 		return centre.y - radius;
+	}
+
+	public Piece getPiece() {
+		return piece;
 	}
 
 }

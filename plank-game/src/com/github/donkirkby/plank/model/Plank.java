@@ -26,4 +26,14 @@ public class Plank {
 		return piece.getColour() == spaces[i];
 	}
 
+	public int indexOf(Piece piece) {
+		for (int i = 0; i < spaces.length; i++) {
+			if (spaces[i] == piece.getColour()) {
+				return i;
+			}
+		}
+		throw new IllegalArgumentException(
+				"Colour not found: " + piece.getColour());
+	}
+
 }
