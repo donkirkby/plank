@@ -21,7 +21,7 @@ public class PieceViewTest {
 		float width = 25;
 		Vector2 target = new Vector2(210, 120);
 
-		Piece piece = new Piece(PieceColour.BLUE);
+		Piece piece = new Piece(0, PieceColour.BLUE);
 		Plank plank = 
 				new Plank(PieceColour.RED, PieceColour.BLUE, PieceColour.GREEN);
 		PieceView pieceView = 
@@ -47,7 +47,7 @@ public class PieceViewTest {
 		float width = 25;
 		Vector2 target = plankCentre.cpy().add(radius / 2, 0);
 
-		Piece piece = new Piece(PieceColour.BLUE);
+		Piece piece = new Piece(0, PieceColour.BLUE);
 		Plank plank = 
 				new Plank(PieceColour.RED, PieceColour.BLUE, PieceColour.GREEN);
 		PieceView pieceView = 
@@ -74,7 +74,7 @@ public class PieceViewTest {
 		Vector2 expectedCentre = plankCentre.cpy().add(0, width);
 		Vector2 target = expectedCentre.cpy().add(0, -radius/2);
 
-		Piece piece = new Piece(PieceColour.RED);
+		Piece piece = new Piece(0, PieceColour.RED);
 		Plank plank = 
 				new Plank(PieceColour.RED, PieceColour.BLUE, PieceColour.GREEN);
 		PieceView pieceView = 

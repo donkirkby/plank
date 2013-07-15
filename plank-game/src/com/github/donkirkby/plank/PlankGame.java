@@ -1,5 +1,6 @@
 package com.github.donkirkby.plank;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
@@ -16,40 +17,57 @@ import com.badlogic.gdx.math.Vector3;
 import com.github.donkirkby.plank.model.Piece;
 import com.github.donkirkby.plank.model.PieceColour;
 import com.github.donkirkby.plank.model.Plank;
+import com.github.donkirkby.plank.view.GameComponentView;
 import com.github.donkirkby.plank.view.PieceView;
 import com.github.donkirkby.plank.view.PlankView;
 
 public class PlankGame implements ApplicationListener {
 	private OrthographicCamera camera;
-	PlankView plankView;
-	List<PieceView> pieceViews;
+	private PlankView plankView;
+	private List<PieceView> pieceViews;
+	private List<GameComponentView> allViews;
 	private SpriteBatch batch;
-	TextureAtlas atlas;
-	TextureRegion plankImage;
-	EnumMap<PieceColour, TextureRegion> pieceImages;
+	private TextureAtlas atlas;
+	private TextureRegion plankImage;
+	private EnumMap<PieceColour, List<TextureRegion>> pieceImages;
 
 	@Override
 	public void create() {
 		atlas = new TextureAtlas(Gdx.files.internal("plank.pack"));
-		pieceImages = new EnumMap<PieceColour, TextureRegion>(PieceColour.class);
-		pieceImages.put(PieceColour.RED, atlas.findRegion("circle-red"));
-		pieceImages.put(PieceColour.GREEN, atlas.findRegion("circle-green"));
+		List<String> shapeNames = Arrays.asList("circle", "square");
+		pieceImages = new EnumMap<PieceColour, List<TextureRegion>>(
+				PieceColour.class);
+		pieceViews = new ArrayList<PieceView>();
+		
+		PieceColour[] colours = PieceColour.values();
+		for (int i = 0; i < colours.length; i++) {
+			PieceColour colour = colours[i];
+			List<TextureRegion> colourImages = new ArrayList<TextureRegion>();
+			for (int player = 0; player < shapeNames.size(); player++) {
+				String shapeName = shapeNames.get(player);
+				colourImages.add(atlas.findRegion(
+						shapeName + "-" + colour.name().toLowerCase()));
+				pieceViews.add(new PieceView(
+						new Piece(player, colour), 
+						new Vector2(50 + i*50, 50 + player*400), 20));
+				pieceViews.add(new PieceView(
+						new Piece(player, colour), 
+						new Vector2(50 + i*50, 100 + player*300), 20));
+			}
+			pieceImages.put(colour, colourImages);
+		}
 		plankImage = atlas.findRegion("plank-rgb");
 
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
 		batch = new SpriteBatch();
 		
-		pieceViews = Arrays.asList(
-				new PieceView(
-						new Piece(PieceColour.RED), 
-						new Vector2(200/2 - 40/2, 480/2), 20),
-				new PieceView(
-						new Piece(PieceColour.GREEN), 
-						new Vector2(300/2 - 40/2, 480/2), 20));
-
 		Plank plank = new Plank(PieceColour.RED, PieceColour.GREEN, PieceColour.BLUE);
 		plankView = new PlankView(plank, new Vector2(800 / 2 - 50 / 2, 100), 50);
+		
+		allViews = new ArrayList<GameComponentView>();
+		allViews.addAll(pieceViews);
+		allViews.add(plankView);
 		
 		for (PieceView pieceView : pieceViews) {
 			pieceView.addPossibleDestination(plankView);
@@ -72,20 +90,23 @@ public class PlankGame implements ApplicationListener {
 		batch.begin();
 		batch.draw(plankImage, plankView.getLeft(), plankView.getBottom());
 		for (PieceView pieceView : pieceViews) {
+			Piece piece = pieceView.getPiece();
 			TextureRegion pieceImage = 
-					pieceImages.get(pieceView.getPiece().getColour());
+					pieceImages.get(piece.getColour()).get(piece.getPlayer());
 			batch.draw(pieceImage, pieceView.getLeft(), pieceView.getBottom());
 		}
 		batch.end();
+		if (Gdx.input.isTouched()) {
+			Vector3 touchPos3 = new Vector3();
+			touchPos3.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+			camera.unproject(touchPos3);
+			Vector2 touchPos = new Vector2(touchPos3.x, touchPos3.y);
+			GameComponentView touched = 
+					GameComponentView.findClosest(touchPos, allViews);
+			touched.dragTo(touchPos);
+		}
 		for (int i = 0; i < pieceViews.size(); i++) {
-			PieceView pieceView = pieceViews.get(i);
-			if (Gdx.input.isTouched(i)) {
-				Vector3 touchPos3 = new Vector3();
-				touchPos3.set(Gdx.input.getX(i), Gdx.input.getY(i), 0);
-				camera.unproject(touchPos3);
-				Vector2 touchPos = new Vector2(touchPos3.x, touchPos3.y);
-				pieceView.dragTo(touchPos);
-			}
+			GameComponentView pieceView = pieceViews.get(i);
 		}
 	}
 

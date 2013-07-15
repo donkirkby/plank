@@ -3,16 +3,15 @@ package com.github.donkirkby.plank.view;
 import com.badlogic.gdx.math.Vector2;
 import com.github.donkirkby.plank.model.Piece;
 
-public class PieceView {
+public class PieceView extends GameComponentView {
 	private Piece piece;
-	private Vector2 centre;
 	private float radius;
 	private float radius2; // radius squared
 	private PlankView destination;
 	
 	public PieceView(Piece piece, Vector2 centre, float radius) {
+		super(centre);
 		this.piece = piece;
-		this.centre = centre;
 		this.radius = radius;
 		this.radius2 = radius * radius;
 	}
@@ -21,30 +20,23 @@ public class PieceView {
 		destination = plankView;
 	}
 
+	@Override
 	public void dragTo(Vector2 target) {
 		Vector2 destinationPosition = destination.getPosition(getPiece());
 		if (target.dst2(destinationPosition) < radius2) {
-			centre.set(destinationPosition);
+			getCentre().set(destinationPosition);
 		}
 		else {
-			centre.set(target);
+			getCentre().set(target);
 		}
 	}
 
-	/**
-	 * Get the position of this piece's centre. Do not modify!
-	 * @return
-	 */
-	public Vector2 getCentre() {
-		return centre;
-	}
-	
 	public float getLeft() {
-		return centre.x - radius;
+		return getCentre().x - radius;
 	}
 	
 	public float getBottom() {
-		return centre.y - radius;
+		return getCentre().y - radius;
 	}
 
 	public Piece getPiece() {

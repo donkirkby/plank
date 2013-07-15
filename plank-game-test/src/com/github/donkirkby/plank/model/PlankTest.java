@@ -14,7 +14,7 @@ public class PlankTest {
 	@Test
 	public void addPiece() {
 		// SETUP
-		Piece piece = new Piece(PieceColour.RED);
+		Piece piece = new Piece(0, PieceColour.RED);
 		Plank plank = 
 				new Plank(PieceColour.RED, PieceColour.GREEN, PieceColour.BLUE);
 		
@@ -29,7 +29,7 @@ public class PlankTest {
 	@Test
 	public void getEmptySpace() {
 		// SETUP
-		Piece piece = new Piece(PieceColour.RED);
+		Piece piece = new Piece(0, PieceColour.RED);
 		Plank plank = 
 				new Plank(PieceColour.RED, PieceColour.GREEN, PieceColour.BLUE);
 		
@@ -44,7 +44,7 @@ public class PlankTest {
 	@Test
 	public void addMiddlePiece() {
 		// SETUP
-		Piece piece = new Piece(PieceColour.GREEN);
+		Piece piece = new Piece(0, PieceColour.GREEN);
 		Plank plank = 
 				new Plank(PieceColour.RED, PieceColour.GREEN, PieceColour.BLUE);
 		
@@ -59,7 +59,7 @@ public class PlankTest {
 	@Test
 	public void isMatch() {
 		// SETUP
-		Piece piece = new Piece(PieceColour.GREEN);
+		Piece piece = new Piece(0, PieceColour.GREEN);
 		Plank plank = 
 				new Plank(PieceColour.RED, PieceColour.GREEN, PieceColour.BLUE);
 		
@@ -75,8 +75,8 @@ public class PlankTest {
 	@Test
 	public void indexOf() {
 		// SETUP
-		Piece redPiece = new Piece(PieceColour.RED);
-		Piece greenPiece = new Piece(PieceColour.GREEN);
+		Piece redPiece = new Piece(0, PieceColour.RED);
+		Piece greenPiece = new Piece(0, PieceColour.GREEN);
 		Plank plank = 
 				new Plank(PieceColour.RED, PieceColour.GREEN, PieceColour.BLUE);
 		

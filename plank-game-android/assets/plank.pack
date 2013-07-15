@@ -3,9 +3,23 @@ plank.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-plank-rgb
+plank-brg
   rotate: false
   xy: 1, 85
+  size: 50, 150
+  orig: 50, 150
+  offset: 0, 0
+  index: -1
+plank-rgb
+  rotate: false
+  xy: 53, 85
+  size: 50, 150
+  orig: 50, 150
+  offset: 0, 0
+  index: -1
+plank-rbg
+  rotate: false
+  xy: 105, 85
   size: 50, 150
   orig: 50, 150
   offset: 0, 0
@@ -17,9 +31,37 @@ circle-green
   orig: 40, 40
   offset: 0, 0
   index: -1
-circle-red
+square-blue
+  rotate: false
+  xy: 157, 195
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: -1
+square-red
   rotate: false
   xy: 1, 1
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: -1
+circle-red
+  rotate: false
+  xy: 43, 43
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: -1
+square-green
+  rotate: false
+  xy: 157, 153
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: -1
+circle-blue
+  rotate: false
+  xy: 199, 195
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
