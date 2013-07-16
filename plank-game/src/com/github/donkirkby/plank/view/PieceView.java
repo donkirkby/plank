@@ -7,7 +7,7 @@ public class PieceView extends GameComponentView {
 	private Piece piece;
 	private float radius;
 	private float radius2; // radius squared
-	private PlankView destination;
+	private Iterable<PlankView> destinations;
 	
 	public PieceView(Piece piece, Vector2 centre, float radius) {
 		super(centre);
@@ -16,19 +16,20 @@ public class PieceView extends GameComponentView {
 		this.radius2 = radius * radius;
 	}
 
-	public void addPossibleDestination(PlankView plankView) {
-		destination = plankView;
+	public void setDestinations(Iterable<PlankView> destinations) {
+		this.destinations = destinations;
 	}
 
 	@Override
 	public void dragTo(Vector2 target) {
-		Vector2 destinationPosition = destination.getPosition(getPiece());
-		if (target.dst2(destinationPosition) < radius2) {
-			getCentre().set(destinationPosition);
+		for (PlankView destination : destinations) {
+			Vector2 destinationPosition = destination.getPosition(piece);
+			if (target.dst2(destinationPosition) < radius2) {
+				setCentre(destinationPosition);
+				return;
+			}
 		}
-		else {
-			getCentre().set(target);
-		}
+		setCentre(target);
 	}
 
 	public float getLeft() {

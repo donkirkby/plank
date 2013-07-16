@@ -3,6 +3,8 @@ package com.github.donkirkby.plank.view;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 
 import com.badlogic.gdx.math.Vector2;
@@ -30,7 +32,7 @@ public class PieceViewTest {
 				new PlankView(plank, plankCentre, width);
 		
 		// EXEC
-		pieceView.addPossibleDestination(plankView);
+		pieceView.setDestinations(Arrays.asList(plankView));
 		pieceView.dragTo(target);
 		Vector2 newCentre = pieceView.getCentre();
 		
@@ -56,12 +58,48 @@ public class PieceViewTest {
 				new PlankView(plank, plankCentre, width);
 		
 		// EXEC
-		pieceView.addPossibleDestination(plankView);
+		pieceView.setDestinations(Arrays.asList(plankView));
 		pieceView.dragTo(target);
 		Vector2 newCentre = pieceView.getCentre();
 		
 		// VERIFY
 		assertThat("centre", newCentre, is(plankCentre));
+	}
+
+	@Test
+	public void snapToMultiplePlanks() {
+		// SETUP
+		Vector2 oldCentre = new Vector2(200, 100);
+		float radius = 10;
+		Vector2 plankCentre1 = new Vector2(300, 100);
+		Vector2 plankCentre2 = new Vector2(400, 100);
+		float width = 25;
+		Vector2 expectedCentre2 = plankCentre2.cpy().add(0, width);
+		Vector2 target1 = plankCentre1.cpy().add(radius / 2, 0);
+		Vector2 target2 = expectedCentre2.cpy().add(radius / 2, 0);
+
+		Piece piece = new Piece(0, PieceColour.BLUE);
+		Plank plank1 = 
+				new Plank(PieceColour.RED, PieceColour.BLUE, PieceColour.GREEN);
+		Plank plank2 = 
+				new Plank(PieceColour.BLUE, PieceColour.RED, PieceColour.GREEN);
+		PieceView pieceView = 
+				new PieceView(piece, oldCentre, radius);
+		PlankView plankView1 = 
+				new PlankView(plank1, plankCentre1, width);
+		PlankView plankView2 = 
+				new PlankView(plank2, plankCentre2, width);
+		
+		// EXEC
+		pieceView.setDestinations(Arrays.asList(plankView1, plankView2));
+		pieceView.dragTo(target1);
+		Vector2 newCentre1 = pieceView.getCentre().cpy();
+		pieceView.dragTo(target2);
+		Vector2 newCentre2 = pieceView.getCentre();
+		
+		// VERIFY
+		assertThat("centre 1", newCentre1, is(plankCentre1));
+		assertThat("centre 2", newCentre2, is(expectedCentre2));
 	}
 
 	@Test
@@ -83,7 +121,7 @@ public class PieceViewTest {
 				new PlankView(plank, plankCentre, width);
 		
 		// EXEC
-		pieceView.addPossibleDestination(plankView);
+		pieceView.setDestinations(Arrays.asList(plankView));
 		pieceView.dragTo(target);
 		Vector2 newCentre = pieceView.getCentre();
 		

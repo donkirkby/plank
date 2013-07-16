@@ -1,10 +1,12 @@
 package com.github.donkirkby.plank.view;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class GameComponentView {
 
 	private Vector2 centre;
+	private TextureRegion image;
 	
 	protected GameComponentView(Vector2 centre) {
 		this.centre = centre;
@@ -17,9 +19,25 @@ public abstract class GameComponentView {
 		return centre;
 	}
 	
+	public void setCentre(Vector2 centre) {
+		this.centre.set(centre);
+	}
+	
+	public void setCentre(float x, float y) {
+		centre.set(x, y);
+	}
+	
 	public abstract float getBottom();
 
 	public abstract float getLeft();
+
+	public TextureRegion getImage() {
+		return image;
+	}
+
+	public void setImage(TextureRegion image) {
+		this.image = image;
+	}
 
 	public abstract void dragTo(Vector2 target);
 

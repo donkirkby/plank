@@ -30,5 +30,6 @@ public class PlankView extends GameComponentView {
 	}
 
 	public void dragTo(Vector2 target) {
+		setCentre(target);
 	}
 }

@@ -2,7 +2,6 @@ package com.github.donkirkby.plank;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.EnumMap;
 import java.util.List;
 
 import com.badlogic.gdx.ApplicationListener;
@@ -11,7 +10,7 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.github.donkirkby.plank.model.Piece;
@@ -23,55 +22,78 @@ import com.github.donkirkby.plank.view.PlankView;
 
 public class PlankGame implements ApplicationListener {
 	private OrthographicCamera camera;
-	private PlankView plankView;
 	private List<PieceView> pieceViews;
+	private List<PlankView> plankViews;
 	private List<GameComponentView> allViews;
 	private SpriteBatch batch;
 	private TextureAtlas atlas;
-	private TextureRegion plankImage;
-	private EnumMap<PieceColour, List<TextureRegion>> pieceImages;
 
 	@Override
 	public void create() {
 		atlas = new TextureAtlas(Gdx.files.internal("plank.pack"));
 		List<String> shapeNames = Arrays.asList("circle", "square");
-		pieceImages = new EnumMap<PieceColour, List<TextureRegion>>(
-				PieceColour.class);
 		pieceViews = new ArrayList<PieceView>();
 		
 		PieceColour[] colours = PieceColour.values();
 		for (int i = 0; i < colours.length; i++) {
 			PieceColour colour = colours[i];
-			List<TextureRegion> colourImages = new ArrayList<TextureRegion>();
 			for (int player = 0; player < shapeNames.size(); player++) {
 				String shapeName = shapeNames.get(player);
-				colourImages.add(atlas.findRegion(
-						shapeName + "-" + colour.name().toLowerCase()));
-				pieceViews.add(new PieceView(
+				AtlasRegion image = atlas.findRegion(
+						shapeName + "-" + colour.name().toLowerCase());
+				PieceView piece1 = new PieceView(
 						new Piece(player, colour), 
-						new Vector2(50 + i*50, 50 + player*400), 20));
-				pieceViews.add(new PieceView(
+						new Vector2(50 + i*50, 50 + player*400), 20);
+				PieceView piece2 = new PieceView(
 						new Piece(player, colour), 
-						new Vector2(50 + i*50, 100 + player*300), 20));
+						new Vector2(50 + i*50, 100 + player*300), 20);
+				piece1.setImage(image);
+				piece2.setImage(image);
+				pieceViews.add(piece1);
+				pieceViews.add(piece2);
 			}
-			pieceImages.put(colour, colourImages);
 		}
-		plankImage = atlas.findRegion("plank-rgb");
+
+		plankViews = new ArrayList<PlankView>();
+		PieceColour[][] plankColourSets = {
+				{PieceColour.RED, PieceColour.GREEN, PieceColour.BLUE},
+				{PieceColour.RED, PieceColour.BLUE, PieceColour.GREEN},
+				{PieceColour.BLUE, PieceColour.RED, PieceColour.GREEN}
+		};
+		for (int i = 0; i < plankColourSets.length; i++) {
+			PieceColour[] pieceColours = plankColourSets[i];
+			StringBuilder builder = new StringBuilder("plank-");
+			for (PieceColour pieceColour : pieceColours) {
+				builder.append(pieceColour.name().toLowerCase().charAt(0));
+			}
+			AtlasRegion image = atlas.findRegion(builder.toString());
+			for (int player = 0; player < shapeNames.size(); player++) {
+				for (int j = 0; j < 2; j++) {
+					Plank plank = new Plank(
+							pieceColours[0], 
+							pieceColours[1], 
+							pieceColours[2]);
+					PlankView plankView = new PlankView(
+							plank, 
+							new Vector2(
+									250 + i * 120 + j * 60, 
+									80 + player*320), 
+							50);
+					plankView.setImage(image);
+					plankViews.add(plankView);
+				}
+			}
+		}
+		for (PieceView pieceView : pieceViews) {
+			pieceView.setDestinations(plankViews);
+		}
+		allViews = new ArrayList<GameComponentView>();
+		allViews.addAll(plankViews);
+		allViews.addAll(pieceViews);
 
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
 		batch = new SpriteBatch();
-		
-		Plank plank = new Plank(PieceColour.RED, PieceColour.GREEN, PieceColour.BLUE);
-		plankView = new PlankView(plank, new Vector2(800 / 2 - 50 / 2, 100), 50);
-		
-		allViews = new ArrayList<GameComponentView>();
-		allViews.addAll(pieceViews);
-		allViews.add(plankView);
-		
-		for (PieceView pieceView : pieceViews) {
-			pieceView.addPossibleDestination(plankView);
-		}
 	}
 
 	@Override
@@ -88,12 +110,8 @@ public class PlankGame implements ApplicationListener {
 
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		batch.draw(plankImage, plankView.getLeft(), plankView.getBottom());
-		for (PieceView pieceView : pieceViews) {
-			Piece piece = pieceView.getPiece();
-			TextureRegion pieceImage = 
-					pieceImages.get(piece.getColour()).get(piece.getPlayer());
-			batch.draw(pieceImage, pieceView.getLeft(), pieceView.getBottom());
+		for (GameComponentView view : allViews) {
+			batch.draw(view.getImage(), view.getLeft(), view.getBottom());
 		}
 		batch.end();
 		if (Gdx.input.isTouched()) {
@@ -104,9 +122,6 @@ public class PlankGame implements ApplicationListener {
 			GameComponentView touched = 
 					GameComponentView.findClosest(touchPos, allViews);
 			touched.dragTo(touchPos);
-		}
-		for (int i = 0; i < pieceViews.size(); i++) {
-			GameComponentView pieceView = pieceViews.get(i);
 		}
 	}
 
