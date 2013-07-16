@@ -26,17 +26,18 @@ public class PieceViewTest {
 		Piece piece = new Piece(0, PieceColour.BLUE);
 		Plank plank = 
 				new Plank(PieceColour.RED, PieceColour.BLUE, PieceColour.GREEN);
-		PieceView pieceView = 
+		GameComponentView pieceView = 
 				new PieceView(piece, oldCentre, radius);
 		PlankView plankView = 
 				new PlankView(plank, plankCentre, width);
 		
 		// EXEC
 		pieceView.setDestinations(Arrays.asList(plankView));
-		pieceView.dragTo(target);
+		boolean isSnapped = pieceView.dragTo(target);
 		Vector2 newCentre = pieceView.getCentre();
 		
 		// VERIFY
+		assertThat("is snapped", isSnapped, is(false));
 		assertThat("centre", newCentre, is(target));
 	}
 
@@ -52,17 +53,18 @@ public class PieceViewTest {
 		Piece piece = new Piece(0, PieceColour.BLUE);
 		Plank plank = 
 				new Plank(PieceColour.RED, PieceColour.BLUE, PieceColour.GREEN);
-		PieceView pieceView = 
+		GameComponentView pieceView = 
 				new PieceView(piece, oldCentre, radius);
 		PlankView plankView = 
 				new PlankView(plank, plankCentre, width);
 		
 		// EXEC
 		pieceView.setDestinations(Arrays.asList(plankView));
-		pieceView.dragTo(target);
+		boolean isSnapped = pieceView.dragTo(target);
 		Vector2 newCentre = pieceView.getCentre();
 		
 		// VERIFY
+		assertThat("is snapped", isSnapped, is(true));
 		assertThat("centre", newCentre, is(plankCentre));
 	}
 
@@ -83,7 +85,7 @@ public class PieceViewTest {
 				new Plank(PieceColour.RED, PieceColour.BLUE, PieceColour.GREEN);
 		Plank plank2 = 
 				new Plank(PieceColour.BLUE, PieceColour.RED, PieceColour.GREEN);
-		PieceView pieceView = 
+		GameComponentView pieceView = 
 				new PieceView(piece, oldCentre, radius);
 		PlankView plankView1 = 
 				new PlankView(plank1, plankCentre1, width);
@@ -115,7 +117,7 @@ public class PieceViewTest {
 		Piece piece = new Piece(0, PieceColour.RED);
 		Plank plank = 
 				new Plank(PieceColour.RED, PieceColour.BLUE, PieceColour.GREEN);
-		PieceView pieceView = 
+		GameComponentView pieceView = 
 				new PieceView(piece, oldCentre, radius);
 		PlankView plankView = 
 				new PlankView(plank, plankCentre, width);

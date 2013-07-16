@@ -1,5 +1,7 @@
 package com.github.donkirkby.plank.view;
 
+import java.util.List;
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
@@ -7,6 +9,7 @@ public abstract class GameComponentView {
 
 	private Vector2 centre;
 	private TextureRegion image;
+	private List<PlankView> destinations;
 	
 	protected GameComponentView(Vector2 centre) {
 		this.centre = centre;
@@ -39,7 +42,25 @@ public abstract class GameComponentView {
 		this.image = image;
 	}
 
-	public abstract void dragTo(Vector2 target);
+	/**
+	 * Drag a view to a position.
+	 * @param target the position to drag to
+	 * @return true if the view was snapped to a destination point.
+	 */
+	public abstract boolean dragTo(Vector2 target);
+
+	/**
+	 * Set the list of plank views that this piece can be placed on. More
+	 * plank views can be added to the collection after this call.
+	 * @param destinations list of plank views that this piece can be placed on
+	 */
+	public void setDestinations(List<PlankView> destinations) {
+		this.destinations = destinations;
+	}
+
+	public List<PlankView> getDestinations() {
+		return destinations;
+	}
 
 	/**
 	 * Find the game component that is closest to a certain point.

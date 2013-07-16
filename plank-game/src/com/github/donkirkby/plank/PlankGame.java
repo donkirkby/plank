@@ -23,7 +23,9 @@ import com.github.donkirkby.plank.view.PlankView;
 public class PlankGame implements ApplicationListener {
 	private OrthographicCamera camera;
 	private List<PieceView> pieceViews;
-	private List<PlankView> plankViews;
+	private List<PlankView> placedPlankViews;
+	private List<PlankView> unplacedPlankViews;
+	private List<GameComponentView> draggableViews;
 	private List<GameComponentView> allViews;
 	private SpriteBatch batch;
 	private TextureAtlas atlas;
@@ -55,7 +57,8 @@ public class PlankGame implements ApplicationListener {
 			}
 		}
 
-		plankViews = new ArrayList<PlankView>();
+		unplacedPlankViews = new ArrayList<PlankView>();
+		placedPlankViews = new ArrayList<PlankView>();
 		PieceColour[][] plankColourSets = {
 				{PieceColour.RED, PieceColour.GREEN, PieceColour.BLUE},
 				{PieceColour.RED, PieceColour.BLUE, PieceColour.GREEN},
@@ -81,17 +84,20 @@ public class PlankGame implements ApplicationListener {
 									80 + player*320), 
 							50);
 					plankView.setImage(image);
-					plankViews.add(plankView);
+					plankView.setLineHeight(240);
+					unplacedPlankViews.add(plankView);
 				}
 			}
 		}
-		for (PieceView pieceView : pieceViews) {
-			pieceView.setDestinations(plankViews);
-		}
 		allViews = new ArrayList<GameComponentView>();
-		allViews.addAll(plankViews);
+		allViews.addAll(unplacedPlankViews);
 		allViews.addAll(pieceViews);
-
+		for (GameComponentView view : allViews) {
+			view.setDestinations(placedPlankViews);
+		}
+		draggableViews = new ArrayList<GameComponentView>();
+		draggableViews.addAll(allViews);
+		
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
 		batch = new SpriteBatch();
@@ -123,11 +129,18 @@ public class PlankGame implements ApplicationListener {
 			touchPos3.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			camera.unproject(touchPos3);
 			Vector2 touchPos = new Vector2(touchPos3.x, touchPos3.y);
-			if (draggingView == null) {
+			if (draggingView == null && Gdx.input.justTouched()) {
 				draggingView =
-						GameComponentView.findClosest(touchPos, allViews);
+						GameComponentView.findClosest(touchPos, draggableViews);
 			}
-			draggingView.dragTo(touchPos);
+			if (draggingView != null) {
+				boolean isSnapped = draggingView.dragTo(touchPos);
+				if (isSnapped && unplacedPlankViews.contains(draggingView)) {
+					unplacedPlankViews.remove(draggingView);
+					draggableViews.remove(draggingView);
+					draggingView = null;
+				}
+			}
 		}
 	}
 
