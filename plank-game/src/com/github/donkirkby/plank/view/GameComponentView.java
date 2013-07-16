@@ -55,7 +55,7 @@ public abstract class GameComponentView {
 		float shortestDistance2 = -1;
 		for (GameComponentView component : components) {
 			float distance2 = point.dst2(component.getCentre());
-			if (shortestDistance2 < 0 || distance2 < shortestDistance2) {
+			if (shortestDistance2 < 0 || distance2 <= shortestDistance2) {
 				shortestDistance2 = distance2;
 				closestComponent = component;
 			}

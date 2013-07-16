@@ -27,6 +27,7 @@ public class PlankGame implements ApplicationListener {
 	private List<GameComponentView> allViews;
 	private SpriteBatch batch;
 	private TextureAtlas atlas;
+	private GameComponentView draggingView;
 
 	@Override
 	public void create() {
@@ -114,14 +115,19 @@ public class PlankGame implements ApplicationListener {
 			batch.draw(view.getImage(), view.getLeft(), view.getBottom());
 		}
 		batch.end();
-		if (Gdx.input.isTouched()) {
+		if ( ! Gdx.input.isTouched()) {
+			draggingView = null;
+		}
+		else {
 			Vector3 touchPos3 = new Vector3();
 			touchPos3.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			camera.unproject(touchPos3);
 			Vector2 touchPos = new Vector2(touchPos3.x, touchPos3.y);
-			GameComponentView touched = 
-					GameComponentView.findClosest(touchPos, allViews);
-			touched.dragTo(touchPos);
+			if (draggingView == null) {
+				draggingView =
+						GameComponentView.findClosest(touchPos, allViews);
+			}
+			draggingView.dragTo(touchPos);
 		}
 	}
 

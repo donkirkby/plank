@@ -20,8 +20,8 @@ public class GameComponentViewTest {
 		GameComponentView plankView = 
 				new PlankView(null, new Vector2(100, 50), 60);
 		List<GameComponentView> components = Arrays.asList(
-				pieceView,
-				plankView);
+				plankView,
+				pieceView);
 		Vector2 highPoint = new Vector2(100, 45);
 		Vector2 lowPoint = new Vector2(90, 0);
 		Vector2 midPoint = new Vector2(100, 25);
@@ -37,7 +37,7 @@ public class GameComponentViewTest {
 		// VERIFY
 		assertThat("high", closestToHighPoint, is(plankView));
 		assertThat("low", closestToLowPoint, is(pieceView));
-		// Tie goes to earliest in list.
+		// Tie goes to latest in list.
 		assertThat("mid", closestToMidPoint, is(pieceView));
 	}
 

@@ -5,9 +5,9 @@ A board game like Tic Tac Toe on a moving board
 
 Road Map
 ========
-Don't switch pieces during drag
-
 Place planks
+
+Turn planks
 
 Place pieces
 
