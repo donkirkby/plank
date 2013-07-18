@@ -136,4 +136,21 @@ public class PlankViewTest {
 		assertThat("centre", newCentre, is(expectedCentre));
 		assertThat("destination", destination, is(draggingPlankView));
 	}
+	
+	@Test
+	public void flip() {
+		// SETUP
+		Plank plank = 
+				new Plank(PieceColour.RED, PieceColour.GREEN, PieceColour.BLUE);
+		PlankView view = new PlankView(plank, new Vector2(), 50);
+		
+		// EXEC
+		boolean defaultPlankFlip = plank.isFlipped();
+		view.flip();
+		boolean isPlankFlipped = plank.isFlipped();
+		
+		// VERIFY
+		assertThat("plank flipped by default", defaultPlankFlip, is(false));
+		assertThat("plank flipped after", isPlankFlipped, is(true));
+	}
 }

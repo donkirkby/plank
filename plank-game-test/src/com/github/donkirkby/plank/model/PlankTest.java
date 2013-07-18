@@ -89,4 +89,19 @@ public class PlankTest {
 		assertThat("index", greenIndex, is(1));
 	}
 
+	@Test
+	public void Flip() {
+		// SETUP
+		Piece redPiece = new Piece(0, PieceColour.RED);
+		Plank plank = 
+				new Plank(PieceColour.RED, PieceColour.GREEN, PieceColour.BLUE);
+		
+		// EXEC
+		plank.flip();
+		int redIndex = plank.indexOf(redPiece);
+		
+		// VERIFY
+		assertThat("index", redIndex, is(2));
+	}
+
 }

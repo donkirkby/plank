@@ -3,6 +3,7 @@ package com.github.donkirkby.plank.model;
 public class Plank {
 	private Piece[] pieces = new Piece[3];
 	private PieceColour[] spaces = new PieceColour[3];
+	private boolean isFlipped;
 
 	public Plank(PieceColour space1, PieceColour space2, PieceColour space3) {
 		spaces = new PieceColour[] {space1, space2, space3};
@@ -34,6 +35,17 @@ public class Plank {
 		}
 		throw new IllegalArgumentException(
 				"Colour not found: " + piece.getColour());
+	}
+
+	public boolean isFlipped() {
+		return isFlipped;
+	}
+
+	public void flip() {
+		isFlipped = ! isFlipped;
+		PieceColour swap = spaces[0];
+		spaces[0] = spaces[2];
+		spaces[2] = swap;
 	}
 
 }

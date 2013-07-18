@@ -134,6 +134,12 @@ public class PlankGame implements ApplicationListener {
 						GameComponentView.findClosest(touchPos, draggableViews);
 			}
 			if (draggingView != null) {
+				if (Gdx.input.isTouched(1) && Gdx.input.justTouched()) {
+					if (draggingView instanceof PlankView) {
+						PlankView plankView = (PlankView) draggingView;
+						plankView.flip();
+					}
+				}
 				boolean isSnapped = draggingView.dragTo(touchPos);
 				if (isSnapped && unplacedPlankViews.contains(draggingView)) {
 					unplacedPlankViews.remove(draggingView);
