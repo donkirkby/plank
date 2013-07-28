@@ -34,7 +34,8 @@ public class PlankGame implements ApplicationListener {
 	@Override
 	public void create() {
 		atlas = new TextureAtlas(Gdx.files.internal("plank.pack"));
-		List<String> shapeNames = Arrays.asList("circle", "square");
+		List<String> shapeNames = 
+				Arrays.asList("circle", "square", "triangle", "octagon");
 		pieceViews = new ArrayList<PieceView>();
 		
 		PieceColour[] colours = PieceColour.values();
@@ -42,14 +43,18 @@ public class PlankGame implements ApplicationListener {
 			PieceColour colour = colours[i];
 			for (int player = 0; player < shapeNames.size(); player++) {
 				String shapeName = shapeNames.get(player);
-				AtlasRegion image = atlas.findRegion(
-						shapeName + "-" + colour.name().toLowerCase());
+				String colourName = colour.name().toLowerCase();
+				String imageName = "images/" + shapeName + "-" + colourName;
+				AtlasRegion image = findRegion(imageName);
+				int playerSide = player % 2;
+				int playerLevel = player / 2 % 2;
+				int pieceX = 50 + i*50 + playerSide * 600;
 				PieceView piece1 = new PieceView(
 						new Piece(player, colour), 
-						new Vector2(50 + i*50, 50 + player*400), 20);
+						new Vector2(pieceX, 50 + playerLevel*350), 20);
 				PieceView piece2 = new PieceView(
 						new Piece(player, colour), 
-						new Vector2(50 + i*50, 100 + player*300), 20);
+						new Vector2(pieceX, 100 + playerLevel*350), 20);
 				piece1.setImage(image);
 				piece2.setImage(image);
 				pieceViews.add(piece1);
@@ -66,11 +71,11 @@ public class PlankGame implements ApplicationListener {
 		};
 		for (int i = 0; i < plankColourSets.length; i++) {
 			PieceColour[] pieceColours = plankColourSets[i];
-			StringBuilder builder = new StringBuilder("plank-");
+			StringBuilder builder = new StringBuilder("images/plank-");
 			for (PieceColour pieceColour : pieceColours) {
 				builder.append(pieceColour.name().toLowerCase().charAt(0));
 			}
-			AtlasRegion image = atlas.findRegion(builder.toString());
+			AtlasRegion image = findRegion(builder.toString());
 			for (int player = 0; player < shapeNames.size(); player++) {
 				for (int j = 0; j < 2; j++) {
 					Plank plank = new Plank(
@@ -101,6 +106,15 @@ public class PlankGame implements ApplicationListener {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
 		batch = new SpriteBatch();
+	}
+
+	private AtlasRegion findRegion(String regionName) {
+		AtlasRegion region = atlas.findRegion(regionName);
+		if (region == null) {
+			throw new IllegalArgumentException(
+					"Region not found, '" + regionName + "'.");
+		}
+		return region;
 	}
 
 	@Override

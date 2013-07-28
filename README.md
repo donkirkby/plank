@@ -5,9 +5,9 @@ A board game like Tic Tac Toe on a moving board
 
 Road Map
 ========
-Turn planks
+Flip planks in HTML version
 
-Place pieces
+Place pieces in model
 
 Detect win
 
