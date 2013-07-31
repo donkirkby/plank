@@ -2,7 +2,6 @@ package com.github.donkirkby.plank.view;
 
 import java.util.List;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.github.donkirkby.plank.model.Piece;
 import com.github.donkirkby.plank.model.Plank;
@@ -33,12 +32,6 @@ public class PlankView extends GameComponentView {
 		return getCentre().y - width*1.5f;
 	}
 	
-	@Override
-	public void setImage(TextureRegion image) {
-		// save a copy so we can safely flip it.
-		super.setImage(new TextureRegion(image));
-	}
-
 	public float getLineHeight() {
 		return lineHeight;
 	}
@@ -72,11 +65,13 @@ public class PlankView extends GameComponentView {
 		setCentre(target);
 		return false;
 	}
-
-	public void flip() {
-		plank.flip();
-		if (getImage() != null) {
-			getImage().flip(false, true);
-		}
+	
+	@Override
+	public void tap() {
+	    plank.flip();
+	    GameComponentImage image = getImage();
+	    if (image != null) {
+	        image.flip();
+        }
 	}
 }

@@ -2,17 +2,16 @@ package com.github.donkirkby.plank.view;
 
 import java.util.List;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class GameComponentView {
 
 	private Vector2 centre;
-	private TextureRegion image;
+	private GameComponentImage image;
 	private List<PlankView> destinations;
 	
 	protected GameComponentView(Vector2 centre) {
-		this.centre = centre;
+		this.centre = centre.cpy();
 	}
 
 	/**
@@ -34,11 +33,11 @@ public abstract class GameComponentView {
 
 	public abstract float getLeft();
 
-	public TextureRegion getImage() {
+	public GameComponentImage getImage() {
 		return image;
 	}
 
-	public void setImage(TextureRegion image) {
+	public void setImage(GameComponentImage image) {
 		this.image = image;
 	}
 
@@ -83,5 +82,13 @@ public abstract class GameComponentView {
 		}
 		return closestComponent;
 	}
+
+    public void draw() {
+        image.draw(getLeft(), getBottom());
+    }
+
+    public void tap() {
+        // By default, do nothing.
+    }
 
 }

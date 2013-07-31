@@ -138,19 +138,23 @@ public class PlankViewTest {
 	}
 	
 	@Test
-	public void flip() {
+	public void tap() {
 		// SETUP
 		Plank plank = 
 				new Plank(PieceColour.RED, PieceColour.GREEN, PieceColour.BLUE);
+		DummyImage image = new DummyImage();
 		PlankView view = new PlankView(plank, new Vector2(), 50);
+        view.setImage(image);
 		
 		// EXEC
 		boolean defaultPlankFlip = plank.isFlipped();
-		view.flip();
+		view.tap();
 		boolean isPlankFlipped = plank.isFlipped();
+		boolean isImageFlipped = image.isFlipped();
 		
 		// VERIFY
 		assertThat("plank flipped by default", defaultPlankFlip, is(false));
-		assertThat("plank flipped after", isPlankFlipped, is(true));
+        assertThat("plank flipped after", isPlankFlipped, is(true));
+        assertThat("image flipped after", isImageFlipped, is(true));
 	}
 }
