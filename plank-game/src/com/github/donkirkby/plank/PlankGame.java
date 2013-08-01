@@ -36,7 +36,7 @@ public class PlankGame implements ApplicationListener {
         
         batch = new SpriteBatch();
 		
-		atlas = new TextureAtlas(Gdx.files.internal("plank.pack"));
+		atlas = new TextureAtlas(Gdx.files.internal("atlas/plank.pack"));
 		List<String> shapeNames = 
 				Arrays.asList("circle", "square", "triangle", "octagon");
 		
