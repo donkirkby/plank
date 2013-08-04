@@ -1,12 +1,12 @@
 plank
 =====
 
-A board game like Tic Tac Toe on a moving board
+A board game like Tic Tac Toe on a moving board.
+
+First described in [The young folk's cyclopedia of games and sports][1] (1890), Plank was updated in Sid Sackson's Gamut of Games to be playable by 2 to 4 players.
 
 Road Map
 ========
-Flip planks in HTML version
-
 Place pieces in model
 
 Detect win
@@ -14,3 +14,7 @@ Detect win
 Run Packer
 
 Use Lombock
+
+Build AI opponent
+
+[1]: http://www.archive.org/stream/youngfolkscyclop00chamiala#page/540/mode/2up
