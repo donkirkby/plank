@@ -17,4 +17,10 @@ Use Lombock
 
 Build AI opponent
 
+Acknowledgements
+================
+Plank photo by [William Warby][flickr].
+
 [1]: http://www.archive.org/stream/youngfolkscyclop00chamiala#page/540/mode/2up
+[flickr]: http://www.flickr.com/photos/wwarby/5107352384/
+
