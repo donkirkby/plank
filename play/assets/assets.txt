@@ -1,0 +1,4 @@
+d:war/
+d:atlas
+t:atlas/plank.pack
+i:atlas/plank.png
