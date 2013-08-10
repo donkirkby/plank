@@ -4,15 +4,7 @@ You can play it [in your browser][play], if it supports WebGL.
 
 Road Map
 ========
-Place pieces in model
-
-Detect win
-
-Run Packer
-
-Use Lombock
-
-Build AI opponent
+See the [issues page][issues] for a list of planned fixes and enhancements.
 
 Acknowledgements
 ================
@@ -21,4 +13,4 @@ Plank photo by [William Warby][flickr].
 [flickr]: http://www.flickr.com/photos/wwarby/5107352384/
 [rules]: http://www.archive.org/stream/youngfolkscyclop00chamiala#page/540/mode/2up
 [play]: http://donkirkby.github.io/plank/play/
-
+[issues]: https://github.com/donkirkby/plank/issues
