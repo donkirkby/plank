@@ -9,15 +9,23 @@ public class Plank {
 		spaces = new PieceColour[] {space1, space2, space3};
 	}
 
-	public void add(Piece piece) {
-		for (int i = 0; i < pieces.length; i++) {
-			PieceColour space = spaces[i];
-			if (piece.getColour() == space) {
-				pieces[i] = piece;
-				return;
-			}
-		}
-	}
+    public void add(Piece piece) {
+        for (int i = 0; i < pieces.length; i++) {
+            PieceColour space = spaces[i];
+            if (piece.getColour() == space) {
+                pieces[i] = piece;
+                return;
+            }
+        }
+    }
+
+    public void remove(Piece piece) {
+        for (int i = 0; i < pieces.length; i++) {
+            if (pieces[i] == piece) {
+                pieces[i] = null;
+            }
+        }
+    }
 
 	public Piece get(int i) {
 		return pieces[i];

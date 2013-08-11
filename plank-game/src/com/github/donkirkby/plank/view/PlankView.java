@@ -22,6 +22,10 @@ public class PlankView extends GameComponentView {
 		return getCentre().cpy().add(0, (1-index)*width);
 	}
 	
+	public Plank getPlank() {
+	    return plank;
+	}
+	
 	@Override
 	public float getLeft() {
 		return getCentre().x - width/2;

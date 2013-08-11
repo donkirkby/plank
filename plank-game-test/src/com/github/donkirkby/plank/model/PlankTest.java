@@ -41,20 +41,36 @@ public class PlankTest {
 		assertThat("piece from empty space", pieceFromEmptySpace, nullValue());
 	}
 
-	@Test
-	public void addMiddlePiece() {
-		// SETUP
-		Piece piece = new Piece(0, PieceColour.GREEN);
-		Plank plank = 
-				new Plank(PieceColour.RED, PieceColour.GREEN, PieceColour.BLUE);
-		
-		// EXEC
-		plank.add(piece);
-		Piece pieceFromPlank = plank.get(1);
-		
-		// VERIFY
-		assertThat("piece from plank", pieceFromPlank, sameInstance(piece));
-	}
+    @Test
+    public void addMiddlePiece() {
+        // SETUP
+        Piece piece = new Piece(0, PieceColour.GREEN);
+        Plank plank = 
+                new Plank(PieceColour.RED, PieceColour.GREEN, PieceColour.BLUE);
+        
+        // EXEC
+        plank.add(piece);
+        Piece pieceFromPlank = plank.get(1);
+        
+        // VERIFY
+        assertThat("piece from plank", pieceFromPlank, sameInstance(piece));
+    }
+
+    @Test
+    public void remove() {
+        // SETUP
+        Piece piece = new Piece(0, PieceColour.GREEN);
+        Plank plank = 
+                new Plank(PieceColour.RED, PieceColour.GREEN, PieceColour.BLUE);
+        
+        // EXEC
+        plank.add(piece);
+        plank.remove(piece);
+        Piece pieceFromPlank = plank.get(1);
+        
+        // VERIFY
+        assertThat("piece from plank", pieceFromPlank, nullValue());
+    }
 
 	@Test
 	public void isMatch() {

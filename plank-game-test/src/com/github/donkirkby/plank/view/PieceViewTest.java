@@ -15,7 +15,7 @@ import com.github.donkirkby.plank.model.Plank;
 public class PieceViewTest {
 
 	@Test
-	public void dragTo() {
+	public void dragToNothing() {
 		// SETUP
 		Vector2 oldCentre = new Vector2(200, 100);
 		float radius = 10;
@@ -33,12 +33,18 @@ public class PieceViewTest {
 		
 		// EXEC
 		pieceView.setDestinations(Arrays.asList(plankView));
+		Piece originalPiece = plank.get(1);
+
 		boolean isSnapped = pieceView.dragTo(target);
+		
 		Vector2 newCentre = pieceView.getCentre();
+		Piece addedPiece = plank.get(1);
 		
 		// VERIFY
 		assertThat("is snapped", isSnapped, is(false));
 		assertThat("centre", newCentre, is(target));
+		assertThat("original piece", originalPiece, nullValue());
+		assertThat("added piece", addedPiece, nullValue());
 	}
 
 	@Test
@@ -62,10 +68,12 @@ public class PieceViewTest {
 		pieceView.setDestinations(Arrays.asList(plankView));
 		boolean isSnapped = pieceView.dragTo(target);
 		Vector2 newCentre = pieceView.getCentre();
+        Piece addedPiece = plank.get(1);
 		
 		// VERIFY
 		assertThat("is snapped", isSnapped, is(true));
 		assertThat("centre", newCentre, is(plankCentre));
+        assertThat("added piece", addedPiece, is(piece));
 	}
 
 	@Test
@@ -98,10 +106,14 @@ public class PieceViewTest {
 		Vector2 newCentre1 = pieceView.getCentre().cpy();
 		pieceView.dragTo(target2);
 		Vector2 newCentre2 = pieceView.getCentre();
+        Piece removedPiece = plank1.get(1);
+        Piece addedPiece = plank2.get(0);
 		
 		// VERIFY
 		assertThat("centre 1", newCentre1, is(plankCentre1));
 		assertThat("centre 2", newCentre2, is(expectedCentre2));
+        assertThat("removed piece", removedPiece, nullValue());
+		assertThat("added piece", addedPiece, is(piece));
 	}
 
 	@Test
