@@ -43,8 +43,8 @@ public class PieceViewTest {
 		// VERIFY
 		assertThat("is snapped", isSnapped, is(false));
 		assertThat("centre", newCentre, is(target));
-		assertThat("original piece", originalPiece, nullValue());
-		assertThat("added piece", addedPiece, nullValue());
+		assertThat("original piece", originalPiece, is(Plank.NULL_PIECE));
+		assertThat("added piece", addedPiece, is(Plank.NULL_PIECE));
 	}
 
 	@Test
@@ -112,7 +112,7 @@ public class PieceViewTest {
 		// VERIFY
 		assertThat("centre 1", newCentre1, is(plankCentre1));
 		assertThat("centre 2", newCentre2, is(expectedCentre2));
-        assertThat("removed piece", removedPiece, nullValue());
+        assertThat("removed piece", removedPiece, is(Plank.NULL_PIECE));
 		assertThat("added piece", addedPiece, is(piece));
 	}
 

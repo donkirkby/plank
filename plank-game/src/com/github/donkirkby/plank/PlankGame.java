@@ -43,6 +43,9 @@ public class PlankGame implements ApplicationListener {
 		PieceColour[] colours = PieceColour.values();
 		for (int i = 0; i < colours.length; i++) {
 			PieceColour colour = colours[i];
+			if (colour == PieceColour.NONE) {
+                continue;
+            }
 			for (int player = 0; player < shapeNames.size(); player++) {
 				String shapeName = shapeNames.get(player);
 				String colourName = colour.name().toLowerCase();
