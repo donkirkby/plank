@@ -26,13 +26,20 @@ public class GameStateTest {
         // SETUP
         GameState game = new GameState();
         game.getPlacedPlanks().add(plank1);
+        Piece[] pieces = new Piece[3];
+        Piece[] expectedPieces = new Piece[] { 
+                Piece.NULL_PIECE, 
+                Piece.NULL_PIECE, 
+                Piece.NULL_PIECE 
+        };
         
         plank1.add(player1Green);
         
         // EXEC
-        int winner = game.getWinner();
+        game.findWin(pieces);
         
-        assertThat("winner", winner, is(-1));
+        // VERIFY
+        assertThat("pieces", pieces, is(expectedPieces));
     }
 
     @Test
@@ -40,15 +47,19 @@ public class GameStateTest {
         // SETUP
         GameState game = new GameState();
         game.getPlacedPlanks().add(plank1);
+        Piece[] pieces = new Piece[3];
+        Piece[] expectedPieces = 
+                new Piece[] { player1Red, player1Green, player1Blue };
         
         plank1.add(player1Red);
         plank1.add(player1Green);
         plank1.add(player1Blue);
         
         // EXEC
-        int winner = game.getWinner();
+        game.findWin(pieces);
         
-        assertThat("winner", winner, is(player1));
+        // VERIFY
+        assertThat("pieces", pieces, is(expectedPieces));
     }
 
     @Test
@@ -56,15 +67,19 @@ public class GameStateTest {
         // SETUP
         GameState game = new GameState();
         game.getPlacedPlanks().add(plank1);
+        Piece[] pieces = new Piece[3];
+        Piece[] expectedPieces = 
+                new Piece[] { player2Red, player2Green, player2Blue };
         
         plank1.add(player2Red);
         plank1.add(player2Green);
         plank1.add(player2Blue);
         
         // EXEC
-        int winner = game.getWinner();
+        game.findWin(pieces);
         
-        assertThat("winner", winner, is(player2));
+        // VERIFY
+        assertThat("pieces", pieces, is(expectedPieces));
     }
 
     @Test
@@ -72,15 +87,22 @@ public class GameStateTest {
         // SETUP
         GameState game = new GameState();
         game.getPlacedPlanks().add(plank1);
+        Piece[] pieces = new Piece[3];
+        Piece[] expectedPieces = new Piece[] { 
+                Piece.NULL_PIECE, 
+                Piece.NULL_PIECE, 
+                Piece.NULL_PIECE 
+        };
         
         plank1.add(player2Red);
         plank1.add(player1Green);
         plank1.add(player2Blue);
         
         // EXEC
-        int winner = game.getWinner();
+        game.findWin(pieces);
         
-        assertThat("winner", winner, is(-1));
+        // VERIFY
+        assertThat("pieces", pieces, is(expectedPieces));
     }
 
     @Test
@@ -89,15 +111,19 @@ public class GameStateTest {
         GameState game = new GameState();
         game.getPlacedPlanks().add(plank1);
         game.getPlacedPlanks().add(plank2);
+        Piece[] pieces = new Piece[3];
+        Piece[] expectedPieces = 
+                new Piece[] { player1Red, player1Blue, player1Green };
         
         plank2.add(player1Red);
-        plank2.add(player1Green);
         plank2.add(player1Blue);
+        plank2.add(player1Green);
         
         // EXEC
-        int winner = game.getWinner();
+        game.findWin(pieces);
         
-        assertThat("winner", winner, is(player1));
+        // VERIFY
+        assertThat("pieces", pieces, is(expectedPieces));
     }
 
     @Test
@@ -107,15 +133,19 @@ public class GameStateTest {
         game.getPlacedPlanks().add(plank1);
         game.getPlacedPlanks().add(plank2);
         game.getPlacedPlanks().add(plank3);
+        Piece[] pieces = new Piece[3];
+        Piece[] expectedPieces = 
+                new Piece[] { player1Green, player1Blue, player1Red };
         
         plank1.add(player1Green); // middle
         plank2.add(player1Blue); // middle
         plank3.add(player1Red); // middle
         
         // EXEC
-        int winner = game.getWinner();
+        game.findWin(pieces);
         
-        assertThat("winner", winner, is(player1));
+        // VERIFY
+        assertThat("pieces", pieces, is(expectedPieces));
     }
 
     @Test
@@ -125,15 +155,22 @@ public class GameStateTest {
         game.getPlacedPlanks().add(plank1);
         game.getPlacedPlanks().add(plank2);
         game.getPlacedPlanks().add(plank3);
+        Piece[] pieces = new Piece[3];
+        Piece[] expectedPieces = new Piece[] { 
+                Piece.NULL_PIECE,
+                Piece.NULL_PIECE,
+                Piece.NULL_PIECE
+        };
         
         plank1.add(player1Green); // middle
         plank2.add(player2Blue); // middle
         plank3.add(player1Red); // middle
         
         // EXEC
-        int winner = game.getWinner();
+        game.findWin(pieces);
         
-        assertThat("winner", winner, is(-1));
+        // VERIFY
+        assertThat("pieces", pieces, is(expectedPieces));
     }
 
     @Test
@@ -143,15 +180,22 @@ public class GameStateTest {
         game.getPlacedPlanks().add(plank1);
         game.getPlacedPlanks().add(plank2);
         game.getPlacedPlanks().add(plank3);
+        Piece[] pieces = new Piece[3];
+        Piece[] expectedPieces = new Piece[] { 
+                Piece.NULL_PIECE,
+                Piece.NULL_PIECE,
+                Piece.NULL_PIECE
+        };
         
         plank1.add(player1Blue); // bottom
         plank2.add(player1Green); // bottom
         plank3.add(player1Green2); // bottom
         
         // EXEC
-        int winner = game.getWinner();
+        game.findWin(pieces);
         
-        assertThat("winner", winner, is(-1));
+        // VERIFY
+        assertThat("pieces", pieces, is(expectedPieces));
     }
 
 }

@@ -1,15 +1,17 @@
 package com.github.donkirkby.plank.model;
 
 public class Plank {
-    public static final Piece NULL_PIECE = new Piece(-1, PieceColour.NONE);
-    
-	private Piece[] pieces;
+    private Piece[] pieces;
 	private PieceColour[] spaces = new PieceColour[3];
 	private boolean isFlipped;
 
 	public Plank(PieceColour space1, PieceColour space2, PieceColour space3) {
 		spaces = new PieceColour[] {space1, space2, space3};
-		pieces = new Piece[] {NULL_PIECE, NULL_PIECE, NULL_PIECE};
+		pieces = new Piece[] {
+		        Piece.NULL_PIECE, 
+		        Piece.NULL_PIECE, 
+		        Piece.NULL_PIECE
+		};
 	}
 
     public void add(Piece piece) {
@@ -25,7 +27,7 @@ public class Plank {
     public void remove(Piece piece) {
         for (int i = 0; i < pieces.length; i++) {
             if (pieces[i] == piece) {
-                pieces[i] = NULL_PIECE;
+                pieces[i] = Piece.NULL_PIECE;
             }
         }
     }

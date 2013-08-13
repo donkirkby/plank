@@ -41,7 +41,7 @@ public class PlankTest {
 		assertThat(
 		        "piece from empty space", 
 		        pieceFromEmptySpace, 
-		        is(Plank.NULL_PIECE));
+		        is(Piece.NULL_PIECE));
 	}
 
     @Test
@@ -72,7 +72,7 @@ public class PlankTest {
         Piece pieceFromPlank = plank.get(1);
         
         // VERIFY
-        assertThat("piece from plank", pieceFromPlank, is(Plank.NULL_PIECE));
+        assertThat("piece from plank", pieceFromPlank, is(Piece.NULL_PIECE));
     }
 
 	@Test
