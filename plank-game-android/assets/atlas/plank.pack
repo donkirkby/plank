@@ -108,3 +108,10 @@ images/circle-blue
   orig: 40, 40
   offset: 0, 0
   index: -1
+images/highlight
+  rotate: false
+  xy: 127, 63
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1

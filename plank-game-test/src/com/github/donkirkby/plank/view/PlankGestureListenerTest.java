@@ -17,58 +17,126 @@ import com.github.donkirkby.plank.model.Plank;
 
 public class PlankGestureListenerTest {
 
-	@Test
-	public void pan() {
-		// SETUP
-		Vector2 oldPieceCentre = new Vector2(100, 50);
-		Vector2 oldPlankCentre = new Vector2(200, 50);
-		float width = 50;
-		float lineHeight = 300;
-		float deltaX = 10;
-		float deltaY = 5;
-		Vector2 touchLeft = new Vector2(80, 50);
-		Vector2 touchRight = new Vector2(220,50);
-		Vector2 targetLeft = touchLeft.cpy().add(deltaX, deltaY);
-		Vector2 targetRight = touchRight.cpy().add(deltaX, deltaY);
+    @Test
+    public void pan() {
+        // SETUP
+        Vector2 oldPieceCentre = new Vector2(100, 50);
+        Vector2 oldPlankCentre = new Vector2(200, 50);
+        float width = 50;
+        float lineHeight = 300;
+        float deltaX = 10;
+        float deltaY = 5;
+        Vector2 touchLeft = new Vector2(80, 50);
+        Vector2 touchRight = new Vector2(220,50);
+        Vector2 targetLeft = touchLeft.cpy().add(deltaX, deltaY);
+        Vector2 targetRight = touchRight.cpy().add(deltaX, deltaY);
 
-		List<PlankView> destinations = new ArrayList<PlankView>();
-		Plank plank = 
-				new Plank(PieceColour.RED, PieceColour.BLUE, PieceColour.GREEN);
-		PlankView plankView = 
-				new PlankView(plank, oldPlankCentre, width); // right position
-		plankView.setLineHeight(lineHeight);
-		plankView.setDestinations(destinations);
+        List<PlankView> destinations = new ArrayList<PlankView>();
+        Plank plank = 
+                new Plank(PieceColour.RED, PieceColour.BLUE, PieceColour.GREEN);
+        PlankView plankView = 
+                new PlankView(plank, oldPlankCentre, width); // right position
+        plankView.setLineHeight(lineHeight);
+        plankView.setDestinations(destinations);
 
-		Piece piece = new Piece(0, PieceColour.RED);
-		PieceView pieceView = 
-				new PieceView(piece, oldPieceCentre, 10); // left position
-		pieceView.setDestinations(destinations);
-		
-		PlankGestureListener listener = 
-				new PlankGestureListener(new DummyCamera());
-		listener.addView(pieceView);
-		listener.addView(plankView);
-		
-		// EXEC
-		boolean isHandledLeftTouch = 
-				listener.touchDown(touchLeft.x, touchLeft.y, 0, 0);
-		boolean isHandledLeftPan =
-				listener.pan(targetLeft.x, targetLeft.y, deltaX, deltaY);
-		boolean isHandledRightTouch =
-				listener.touchDown(touchRight.x, touchRight.y, 0, 0);
-		boolean isHandledRightPan = 
-				listener.pan(targetRight.x, targetRight.y, deltaX, deltaY);
-		Vector2 newPieceCentre = pieceView.getCentre();
-		Vector2 newPlankCentre = plankView.getCentre();
-		
-		// VERIFY
-		assertThat("is handled left touch", isHandledLeftTouch, is(true));
-		assertThat("is handled left pan", isHandledLeftPan, is(true));
-		assertThat("is handled right touch", isHandledRightTouch, is(true));
-		assertThat("is handled right pan", isHandledRightPan, is(true));
-		assertThat("new piece centre", newPieceCentre, is(targetLeft));
-		assertThat("new plank centre", newPlankCentre, is(targetRight));
-	}
+        Piece piece = new Piece(0, PieceColour.RED);
+        PieceView pieceView = 
+                new PieceView(piece, oldPieceCentre, 10); // left position
+        pieceView.setDestinations(destinations);
+        
+        PlankGestureListener listener = 
+                new PlankGestureListener(new DummyCamera());
+        listener.addView(pieceView);
+        listener.addView(plankView);
+        
+        PieceView[] expectedWinners = new PieceView[] { null, null, null };
+        
+        // EXEC
+        boolean isHandledLeftTouch = 
+                listener.touchDown(touchLeft.x, touchLeft.y, 0, 0);
+        boolean isHandledLeftPan =
+                listener.pan(targetLeft.x, targetLeft.y, deltaX, deltaY);
+        boolean isHandledRightTouch =
+                listener.touchDown(touchRight.x, touchRight.y, 0, 0);
+        boolean isHandledRightPan = 
+                listener.pan(targetRight.x, targetRight.y, deltaX, deltaY);
+        Vector2 newPieceCentre = pieceView.getCentre();
+        Vector2 newPlankCentre = plankView.getCentre();
+        PieceView[] winners = listener.getWinners();
+        
+        // VERIFY
+        assertThat("is handled left touch", isHandledLeftTouch, is(true));
+        assertThat("is handled left pan", isHandledLeftPan, is(true));
+        assertThat("is handled right touch", isHandledRightTouch, is(true));
+        assertThat("is handled right pan", isHandledRightPan, is(true));
+        assertThat("new piece centre", newPieceCentre, is(targetLeft));
+        assertThat("new plank centre", newPlankCentre, is(targetRight));
+        assertThat("winners", winners, is(expectedWinners));
+    }
+
+    @Test
+    public void findWin() {
+        // SETUP
+        Vector2 oldRedCentre = new Vector2(100, 100);
+        Vector2 oldBlueCentre = new Vector2(100, 50);
+        Vector2 oldGreenCentre = new Vector2(100, 0);
+        Vector2 plankTop = new Vector2(200, 100);
+        Vector2 plankCentre = new Vector2(200, 50);
+        Vector2 plankBottom = new Vector2(200, 0);
+        float width = 50;
+        float lineHeight = 50;
+        float deltaX = 100;
+        float deltaY = 0;
+
+        List<PlankView> destinations = new ArrayList<PlankView>();
+        Plank plank = 
+                new Plank(PieceColour.RED, PieceColour.BLUE, PieceColour.GREEN);
+        PlankView plankView = 
+                new PlankView(plank, plankCentre, width); // right position
+        plankView.setLineHeight(lineHeight);
+        plankView.setDestinations(destinations);
+        destinations.add(plankView);
+
+        Piece redPiece = new Piece(0, PieceColour.RED);
+        PieceView redPieceView = 
+                new PieceView(redPiece, oldRedCentre, 10); // left position
+        redPieceView.setDestinations(destinations);
+        Piece bluePiece = new Piece(0, PieceColour.BLUE);
+        PieceView bluePieceView = 
+                new PieceView(bluePiece, oldBlueCentre, 10); // left position
+        bluePieceView.setDestinations(destinations);
+        Piece greenPiece = new Piece(0, PieceColour.GREEN);
+        PieceView greenPieceView = 
+                new PieceView(greenPiece, oldGreenCentre, 10); // left position
+        greenPieceView.setDestinations(destinations);
+        
+        PlankGestureListener listener = 
+                new PlankGestureListener(new DummyCamera());
+        listener.addView(redPieceView);
+        listener.addView(bluePieceView);
+        listener.addView(greenPieceView);
+        listener.addView(plankView);
+        
+        PieceView[] expectedWinners = 
+                new PieceView[] { redPieceView, bluePieceView, greenPieceView };
+        
+        // EXEC
+        // place plank (doesn't actually move it)
+        listener.touchDown(plankCentre.x, plankCentre.y, 0, 0);
+        listener.pan(plankCentre.x, plankCentre.y, 0, 0);
+        
+        // place three pieces in winning line.
+        listener.touchDown(oldRedCentre.x, oldRedCentre.y, 0, 0);
+        listener.pan(plankTop.x, plankTop.y, deltaX, deltaY);
+        listener.touchDown(oldBlueCentre.x, oldBlueCentre.y, 0, 0);
+        listener.pan(plankCentre.x, plankCentre.y, deltaX, deltaY);
+        listener.touchDown(oldGreenCentre.x, oldGreenCentre.y, 0, 0);
+        listener.pan(plankBottom.x, plankBottom.y, deltaX, deltaY);
+        PieceView[] winners = listener.getWinners();
+        
+        // VERIFY
+        assertThat("winners", winners, is(expectedWinners));
+    }
 
 	/** Drag piece two directly past piece one's position and make sure that
 	 * we don't pick up piece one.

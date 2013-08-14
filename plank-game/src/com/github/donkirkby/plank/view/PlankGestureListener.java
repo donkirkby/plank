@@ -7,10 +7,14 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.github.donkirkby.plank.model.GameState;
+import com.github.donkirkby.plank.model.Piece;
 
 public class PlankGestureListener implements GestureListener {
-	private List<GameComponentView> allViews = 
-			new ArrayList<GameComponentView>();
+    private List<GameComponentView> allViews = 
+            new ArrayList<GameComponentView>();
+    private List<PieceView> pieceViews = 
+            new ArrayList<PieceView>();
     private List<PlankView> placedPlankViews = 
             new ArrayList<PlankView>();
     private List<PlankView> unplacedPlankViews = 
@@ -19,6 +23,9 @@ public class PlankGestureListener implements GestureListener {
             new ArrayList<GameComponentView>();
 	private GameComponentView draggingView;
 	private Camera camera;
+	private GameState state = new GameState();
+	private PieceView[] winners = new PieceView[3];
+	private Piece[] winningPieces = new Piece[3];
 	
 	public PlankGestureListener(Camera camera) {
 		this.camera = camera;
@@ -40,10 +47,30 @@ public class PlankGestureListener implements GestureListener {
 		}
 		Vector2 touchPos = calculateTouchPos(x, y);
 		boolean isSnapped = draggingView.dragTo(touchPos);
-		if (isSnapped && unplacedPlankViews.contains(draggingView)) {
-		    unplacedPlankViews.remove(draggingView);
-		    draggableViews.remove(draggingView);
-			draggingView = null;
+		if (isSnapped) {
+		    if (unplacedPlankViews.contains(draggingView)) {
+		        PlankView placedView = placedPlankViews.get(0);
+		        if (placedView != draggingView) {
+                    placedView = placedPlankViews.get(placedPlankViews.size()-1);
+                }
+		        state.getPlacedPlanks().add(0, placedView.getPlank());
+    		    unplacedPlankViews.remove(draggingView);
+    		    draggableViews.remove(draggingView);
+    			draggingView = null;
+		    }
+		    else {
+		        state.findWin(winningPieces);
+		        if (winningPieces[0] != Piece.NULL_PIECE) {
+                    for (int i = 0; i < winningPieces.length; i++) {
+                        for (PieceView pieceView : pieceViews) {
+                            if (pieceView.getPiece() == winningPieces[i]) {
+                                winners[i] = pieceView;
+                                break;
+                            }
+                        }
+                    }
+                }
+		    }
 		}
 		return true;
 	}
@@ -89,6 +116,7 @@ public class PlankGestureListener implements GestureListener {
 	    pieceView.setDestinations(placedPlankViews);
 	    allViews.add(pieceView);
 	    draggableViews.add(pieceView);
+	    pieceViews.add(pieceView);
 	}
 
 	public void addView(PlankView plankView) {
@@ -112,5 +140,9 @@ public class PlankGestureListener implements GestureListener {
 
     public List<GameComponentView> getAllViews() {
         return allViews;
+    }
+
+    public PieceView[] getWinners() {
+        return winners;
     }
 }

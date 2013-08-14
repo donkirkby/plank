@@ -25,7 +25,9 @@ public class PlankGame implements ApplicationListener {
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	private TextureAtlas atlas;
+	private TextureImage highlight;
     private PlankGestureListener gestureListener;
+    private Piece[] winningPieces = new Piece[3];
 
 	@Override
 	public void create() {
@@ -37,6 +39,7 @@ public class PlankGame implements ApplicationListener {
         batch = new SpriteBatch();
 		
 		atlas = new TextureAtlas(Gdx.files.internal("atlas/plank.pack"));
+		highlight = findRegion("images/highlight");
 		List<String> shapeNames = 
 				Arrays.asList("circle", "square", "triangle", "octagon");
 		
@@ -125,6 +128,13 @@ public class PlankGame implements ApplicationListener {
 		for (GameComponentView view : gestureListener.getAllViews()) {
 		    view.draw();
 		}
+		PieceView[] winners = gestureListener.getWinners();
+		if (winners[0] != null) {
+            for (int i = 0; i < winners.length; i++) {
+                PieceView winner = winners[i];
+                highlight.draw(winner.getLeft() + 10, winner.getBottom() + 10);
+            }
+        }
 		batch.end();
 	}
 
