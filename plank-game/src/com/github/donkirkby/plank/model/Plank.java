@@ -61,4 +61,21 @@ public class Plank {
 		spaces[2] = swap;
 	}
 
+	@Override
+	public String toString() {
+	    StringBuilder builder = new StringBuilder("Plank(");
+	    for (int i = 0; i < 3; i++) {
+            if (i > 0) {
+                builder.append(", ");
+            }
+            builder.append(spaces[i]);
+            if (pieces[i] != Piece.NULL_PIECE) {
+                builder.append("(")
+                    .append(pieces[i].getPlayer())
+                    .append(")");
+            }
+        }
+	    builder.append(")");
+	    return builder.toString();
+	}
 }

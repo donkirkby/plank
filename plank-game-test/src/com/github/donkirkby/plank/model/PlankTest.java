@@ -109,7 +109,7 @@ public class PlankTest {
 	}
 
 	@Test
-	public void Flip() {
+	public void flip() {
 		// SETUP
 		Piece redPiece = new Piece(0, PieceColour.RED);
 		Plank plank = 
@@ -123,4 +123,18 @@ public class PlankTest {
 		assertThat("index", redIndex, is(2));
 	}
 
+	@Test
+	public void string() {
+	    // SETUP
+	    Piece redPiece = new Piece(1, PieceColour.RED);
+	    Plank plank =
+	            new Plank(PieceColour.GREEN, PieceColour.RED, PieceColour.BLUE);
+	    plank.add(redPiece);
+	    
+	    // EXEC
+	    String string = plank.toString();
+	    
+	    // VERIFY
+	    assertThat("string", string, is("Plank(GREEN, RED(1), BLUE)"));
+	}
 }

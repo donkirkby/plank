@@ -156,6 +156,7 @@ public class GameStateTest {
         game.getPlacedPlanks().add(plank2);
         game.getPlacedPlanks().add(plank3);
         Piece[] pieces = new Piece[3];
+        pieces[1] = player1Green; // Make sure it gets removed.
         Piece[] expectedPieces = new Piece[] { 
                 Piece.NULL_PIECE,
                 Piece.NULL_PIECE,

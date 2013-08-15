@@ -50,25 +50,31 @@ public class PlankGestureListener implements GestureListener {
 		if (isSnapped) {
 		    if (unplacedPlankViews.contains(draggingView)) {
 		        PlankView placedView = placedPlankViews.get(0);
-		        if (placedView != draggingView) {
+		        if (placedView == draggingView) {
+		            state.getPlacedPlanks().add(0, placedView.getPlank());
+		        }
+		        else {
                     placedView = placedPlankViews.get(placedPlankViews.size()-1);
+                    state.getPlacedPlanks().add(placedView.getPlank());
                 }
-		        state.getPlacedPlanks().add(0, placedView.getPlank());
     		    unplacedPlankViews.remove(draggingView);
     		    draggableViews.remove(draggingView);
     			draggingView = null;
 		    }
 		    else {
 		        state.findWin(winningPieces);
-		        if (winningPieces[0] != Piece.NULL_PIECE) {
-                    for (int i = 0; i < winningPieces.length; i++) {
-                        for (PieceView pieceView : pieceViews) {
-                            if (pieceView.getPiece() == winningPieces[i]) {
-                                winners[i] = pieceView;
-                                break;
-                            }
-                        }
-                    }
+		        for (int i = 0; i < winningPieces.length; i++) {
+		            if (winningPieces[i] == Piece.NULL_PIECE) {
+		                winners[i] = null;
+		            }
+		            else {
+    		            for (PieceView pieceView : pieceViews) {
+    		                if (pieceView.getPiece() == winningPieces[i]) {
+    		                    winners[i] = pieceView;
+    		                    break;
+    		                }
+    		            }
+    		        }
                 }
 		    }
 		}

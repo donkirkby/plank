@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
@@ -117,7 +118,17 @@ public class PlankGestureListenerTest {
         listener.addView(greenPieceView);
         listener.addView(plankView);
         
-        PieceView[] expectedWinners = 
+        PieceView[] oldWinners = listener.getWinners();
+          
+        // make sure the old winners get removed when there's no winner anymore
+        oldWinners[1] = new PieceView(
+                new Piece(2, PieceColour.RED), 
+                new Vector2(20, 50), 
+                20);
+        
+        PieceView[] expectedWinnersBefore = 
+                new PieceView[] { null, null, null };
+        PieceView[] expectedWinnersAfter = 
                 new PieceView[] { redPieceView, bluePieceView, greenPieceView };
         
         // EXEC
@@ -130,12 +141,14 @@ public class PlankGestureListenerTest {
         listener.pan(plankTop.x, plankTop.y, deltaX, deltaY);
         listener.touchDown(oldBlueCentre.x, oldBlueCentre.y, 0, 0);
         listener.pan(plankCentre.x, plankCentre.y, deltaX, deltaY);
+        PieceView[] winnersBefore = Arrays.copyOf(listener.getWinners(), 3);
         listener.touchDown(oldGreenCentre.x, oldGreenCentre.y, 0, 0);
         listener.pan(plankBottom.x, plankBottom.y, deltaX, deltaY);
-        PieceView[] winners = listener.getWinners();
+        PieceView[] winnersAfter = listener.getWinners();
         
         // VERIFY
-        assertThat("winners", winners, is(expectedWinners));
+        assertThat("winners before", winnersBefore, is(expectedWinnersBefore));
+        assertThat("winners after", winnersAfter, is(expectedWinnersAfter));
     }
 
 	/** Drag piece two directly past piece one's position and make sure that
