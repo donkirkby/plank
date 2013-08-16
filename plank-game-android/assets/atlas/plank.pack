@@ -10,107 +10,114 @@ images/plank-brg
   orig: 50, 150
   offset: 0, 0
   index: -1
-images/plank-rgb
+images/plank-rbg
   rotate: false
   xy: 53, 85
   size: 50, 150
   orig: 50, 150
   offset: 0, 0
   index: -1
-images/plank-rbg
+images/plank-rgb
   rotate: false
   xy: 105, 85
   size: 50, 150
   orig: 50, 150
   offset: 0, 0
   index: -1
-images/circle-green
+images/circle-blue
   rotate: false
   xy: 1, 43
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-images/triangle-green
+images/circle-green
   rotate: false
   xy: 157, 195
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-images/square-blue
+images/circle-red
   rotate: false
   xy: 1, 1
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-images/triangle-red
+images/octagon-blue
   rotate: false
   xy: 43, 43
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-images/triangle-blue
+images/octagon-green
   rotate: false
   xy: 157, 153
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-images/octagon-blue
+images/octagon-red
   rotate: false
   xy: 199, 195
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-images/octagon-red
+images/square-blue
   rotate: false
   xy: 43, 1
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-images/square-red
+images/square-green
   rotate: false
   xy: 85, 43
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-images/octagon-green
+images/square-red
   rotate: false
   xy: 157, 111
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-images/circle-red
+images/triangle-blue
   rotate: false
   xy: 199, 153
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-images/square-green
+images/triangle-green
   rotate: false
   xy: 85, 1
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
-images/circle-blue
+images/triangle-red
   rotate: false
   xy: 199, 111
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
+images/refresh
+  rotate: false
+  xy: 127, 51
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 images/highlight
   rotate: false
-  xy: 127, 63
+  xy: 127, 29
   size: 20, 20
   orig: 20, 20
   offset: 0, 0

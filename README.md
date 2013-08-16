@@ -9,7 +9,9 @@ See the [issues page][issues] for a list of planned fixes and enhancements.
 Acknowledgements
 ================
 Plank photo by [William Warby][flickr].
+Icons by [PC DEfense][icons].
 
+[icons]: http://pc.de/icons/#Stuttgart
 [flickr]: http://www.flickr.com/photos/wwarby/5107352384/
 [rules]: http://www.archive.org/stream/youngfolkscyclop00chamiala#page/540/mode/2up
 [play]: http://donkirkby.github.io/plank/play/
