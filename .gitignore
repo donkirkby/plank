@@ -21,3 +21,9 @@ local.properties
 # Eclipse project files
 #.classpath
 #.project
+
+#GWT generated files
+gwt-unitCache
+plank-game-html/war/assets
+plank-game-html/war/com.github.donkirkby.plank.GwtDefinition
+plank-game-html/war/WEB-INF/deploy
