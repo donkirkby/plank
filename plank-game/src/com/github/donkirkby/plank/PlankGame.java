@@ -22,7 +22,6 @@ public class PlankGame implements ApplicationListener {
 	Array<Rectangle> raindrops;
 	long lastDropTime;
 	private SpriteBatch batch;
-	private Texture texture;
 	Texture dropImage;
 	Texture bucketImage;
 	Sound dropSound;
@@ -59,7 +58,6 @@ public class PlankGame implements ApplicationListener {
 	@Override
 	public void dispose() {
 		batch.dispose();
-		texture.dispose();
 	}
 
 	@Override
