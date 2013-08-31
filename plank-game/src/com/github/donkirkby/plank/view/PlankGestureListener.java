@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.github.donkirkby.plank.model.GameState;
 import com.github.donkirkby.plank.model.Piece;
 
-public class PlankGestureListener implements GestureListener {
+public class PlankGestureListener extends ActorGestureListener {
     private List<GameComponentView> allViews = 
             new ArrayList<GameComponentView>();
     private List<PieceView> pieceViews = 
@@ -32,18 +33,17 @@ public class PlankGestureListener implements GestureListener {
 	}
 	
 	@Override
-	public boolean tap(float x, float y, int count, int button) {
+	public void tap(InputEvent event, float x, float y, int count, int button) {
 	    Vector2 touchPos = calculateTouchPos(x, y);
         GameComponentView tappedView = 
 	            GameComponentView.findClosest(touchPos, draggableViews);
         tappedView.tap();
-		return false;
 	}
 	
 	@Override
-	public boolean pan(float x, float y, float deltaX, float deltaY) {
+	public void pan(InputEvent event, float x, float y, float deltaX, float deltaY) {
 		if (draggingView == null) {
-			return false;
+			return;
 		}
 		Vector2 touchPos = calculateTouchPos(x, y);
 		boolean isSnapped = draggingView.dragTo(touchPos);
@@ -78,44 +78,21 @@ public class PlankGestureListener implements GestureListener {
                 }
 		    }
 		}
-		return true;
 	}
 
 	private Vector2 calculateTouchPos(float x, float y) {
 		Vector3 touchPos3 = new Vector3();
 		touchPos3.set(x, y, 0);
 		camera.unproject(touchPos3);
-		Vector2 touchPos = new Vector2(touchPos3.x, touchPos3.y);
+		Vector2 touchPos = new Vector2(x, y);
 		return touchPos;
 	}
 
 	@Override
-	public boolean touchDown(float x, float y, int pointer, int button) {
+	public void touchDown(InputEvent event, float x, float y, int pointer, int button) {
 		draggingView = GameComponentView.findClosest(
 		        calculateTouchPos(x, y), 
 		        draggableViews);
-		return true;
-	}
-
-	@Override
-	public boolean longPress(float x, float y) {
-		return false;
-	}
-
-	@Override
-	public boolean fling(float velocityX, float velocityY, int button) {
-		return false;
-	}
-
-	@Override
-	public boolean zoom(float initialDistance, float distance) {
-		return false;
-	}
-
-	@Override
-	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2,
-			Vector2 pointer1, Vector2 pointer2) {
-		return false;
 	}
 
 	public void addView(PieceView pieceView) {

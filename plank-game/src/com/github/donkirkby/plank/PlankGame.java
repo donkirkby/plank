@@ -10,8 +10,12 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.github.donkirkby.plank.model.Piece;
 import com.github.donkirkby.plank.model.PieceColour;
 import com.github.donkirkby.plank.model.Plank;
@@ -27,14 +31,28 @@ public class PlankGame implements ApplicationListener {
 	private TextureAtlas atlas;
 	private TextureImage highlight;
     private PlankGestureListener gestureListener;
-    private Piece[] winningPieces = new Piece[3];
+    private Stage stage;
+    private TextButton button;
 
 	@Override
 	public void create() {
-		camera = new OrthographicCamera();
+        Skin skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+        
+        stage = new Stage();
+        button = new TextButton("Click Me!", skin);
+        stage.addActor(button);
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                button.setText("Clicked!");
+            }
+        });
+        Gdx.input.setInputProcessor(stage);
+
+        camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
 		gestureListener = new PlankGestureListener(camera);
-		Gdx.input.setInputProcessor(new GestureDetector(gestureListener));
+		stage.addListener(gestureListener);
         
         batch = new SpriteBatch();
 		
@@ -115,6 +133,7 @@ public class PlankGame implements ApplicationListener {
 	public void dispose() {
 		batch.dispose();
 		atlas.dispose();
+        stage.dispose();
 	}
 
 	@Override
@@ -136,10 +155,15 @@ public class PlankGame implements ApplicationListener {
             }
         }
 		batch.end();
+        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        stage.draw();
 	}
 
 	@Override
 	public void resize(int width, int height) {
+        button.setPosition(
+                (width-button.getWidth())/2, 
+                (height-button.getHeight())/2);
 	}
 
 	@Override
