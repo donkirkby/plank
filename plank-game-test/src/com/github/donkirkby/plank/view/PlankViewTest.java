@@ -4,11 +4,13 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
 
 import com.badlogic.gdx.math.Vector2;
+import com.github.donkirkby.plank.model.Piece;
 import com.github.donkirkby.plank.model.PieceColour;
 import com.github.donkirkby.plank.model.Plank;
 
@@ -157,4 +159,32 @@ public class PlankViewTest {
         assertThat("plank flipped after", isPlankFlipped, is(true));
         assertThat("image flipped after", isImageFlipped, is(true));
 	}
+
+    @Test
+    public void reset() {
+        // SETUP
+        Vector2 oldCentre = new Vector2(200, 100);
+        float radius = 10;
+        Vector2 plankCentre = new Vector2(300, 100);
+        float width = 25;
+        Vector2 target = plankCentre.cpy().add(radius / 2, 0);
+
+        Piece piece = new Piece(0, PieceColour.BLUE);
+        Plank plank = 
+                new Plank(PieceColour.RED, PieceColour.BLUE, PieceColour.GREEN);
+        GameComponentView pieceView = 
+                new PieceView(piece, oldCentre, radius);
+        PlankView plankView = 
+                new PlankView(plank, plankCentre, width);
+        
+        // EXEC
+        pieceView.setDestinations(Arrays.asList(plankView));
+        pieceView.dragTo(target);
+        plankView.reset();
+        Piece addedPiece = plank.get(1);
+        
+        // VERIFY
+        assertThat("added piece", addedPiece, is(Piece.NULL_PIECE));
+    }
+
 }

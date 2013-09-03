@@ -23,15 +23,15 @@ public class PlankGestureListener extends ActorGestureListener {
     private List<GameComponentView> draggableViews = 
             new ArrayList<GameComponentView>();
 	private GameComponentView draggingView;
-	private Camera camera;
+    private Camera camera;
 	private GameState state = new GameState();
 	private PieceView[] winners = new PieceView[3];
 	private Piece[] winningPieces = new Piece[3];
 	
-	public PlankGestureListener(Camera camera) {
-		this.camera = camera;
-	}
-	
+    public PlankGestureListener(Camera camera) {
+        this.camera = camera;
+    }
+    
 	@Override
 	public void tap(InputEvent event, float x, float y, int count, int button) {
 	    Vector2 touchPos = calculateTouchPos(x, y);
@@ -81,10 +81,10 @@ public class PlankGestureListener extends ActorGestureListener {
 	}
 
 	private Vector2 calculateTouchPos(float x, float y) {
-		Vector3 touchPos3 = new Vector3();
-		touchPos3.set(x, y, 0);
-		camera.unproject(touchPos3);
-		Vector2 touchPos = new Vector2(x, y);
+        Vector3 touchPos3 = new Vector3();
+        touchPos3.set(x, y, 0);
+        camera.unproject(touchPos3);
+		Vector2 touchPos = new Vector2(touchPos3.x, camera.viewportHeight - touchPos3.y);
 		return touchPos;
 	}
 
@@ -124,8 +124,25 @@ public class PlankGestureListener extends ActorGestureListener {
     public List<GameComponentView> getAllViews() {
         return allViews;
     }
+    
+    public GameState getGameState() {
+        return state;
+    }
 
     public PieceView[] getWinners() {
         return winners;
+    }
+
+    public void reset() {
+        for (GameComponentView view : allViews) {
+            view.reset();
+        }
+        for (int i = 0; i < winners.length; i++) {
+            winners[i] = null;
+        }
+        draggableViews.addAll(placedPlankViews);
+        unplacedPlankViews.addAll(placedPlankViews);
+        placedPlankViews.clear();
+        state.reset();
     }
 }

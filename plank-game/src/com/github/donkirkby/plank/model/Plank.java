@@ -78,4 +78,10 @@ public class Plank {
 	    builder.append(")");
 	    return builder.toString();
 	}
+
+    public void reset() {
+        for (int i = 0; i < 3; i++) {
+            pieces[i] = Piece.NULL_PIECE;
+        }
+    }
 }

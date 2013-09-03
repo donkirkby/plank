@@ -87,4 +87,8 @@ public class GameState {
             pieces[i] = Piece.NULL_PIECE;
         }
     }
+
+    public void reset() {
+        placedPlanks.clear();
+    }
 }

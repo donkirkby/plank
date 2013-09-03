@@ -7,11 +7,13 @@ import com.badlogic.gdx.math.Vector2;
 public abstract class GameComponentView {
 
 	private Vector2 centre;
+	private Vector2 startCentre;
 	private GameComponentImage image;
 	private List<PlankView> destinations;
 	
 	protected GameComponentView(Vector2 centre) {
 		this.centre = centre.cpy();
+		startCentre = centre.cpy();
 	}
 
 	/**
@@ -89,6 +91,10 @@ public abstract class GameComponentView {
 
     public void tap() {
         // By default, do nothing.
+    }
+
+    public void reset() {
+        centre.set(startCentre);
     }
 
 }

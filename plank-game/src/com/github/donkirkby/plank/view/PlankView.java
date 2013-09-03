@@ -78,4 +78,10 @@ public class PlankView extends GameComponentView {
 	        image.flip();
         }
 	}
+	
+	@Override
+	public void reset() {
+	    super.reset();
+	    plank.reset();
+	}
 }

@@ -13,9 +13,11 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.github.donkirkby.plank.model.Piece;
 import com.github.donkirkby.plank.model.PieceColour;
 import com.github.donkirkby.plank.model.Plank;
@@ -32,21 +34,17 @@ public class PlankGame implements ApplicationListener {
 	private TextureImage highlight;
     private PlankGestureListener gestureListener;
     private Stage stage;
-    private TextButton button;
+    private Button refreshButton;
 
 	@Override
 	public void create() {
         Skin skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+        atlas = new TextureAtlas(Gdx.files.internal("atlas/plank.pack"));
         
         stage = new Stage();
-        button = new TextButton("Click Me!", skin);
-        stage.addActor(button);
-        button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                button.setText("Clicked!");
-            }
-        });
+
+        createRefreshButton(skin);
+        stage.addActor(refreshButton);
         Gdx.input.setInputProcessor(stage);
 
         camera = new OrthographicCamera();
@@ -56,7 +54,6 @@ public class PlankGame implements ApplicationListener {
         
         batch = new SpriteBatch();
 		
-		atlas = new TextureAtlas(Gdx.files.internal("atlas/plank.pack"));
 		highlight = findRegion("images/highlight");
 		List<String> shapeNames = 
 				Arrays.asList("circle", "square", "triangle", "octagon");
@@ -120,6 +117,21 @@ public class PlankGame implements ApplicationListener {
 		}
 	}
 
+    private void createRefreshButton(Skin skin) {
+        ButtonStyle refreshStyle = new ButtonStyle(skin.get(ButtonStyle.class));
+        refreshStyle.up = 
+                new TextureRegionDrawable(atlas.findRegion("images/refresh"));
+        refreshStyle.down = refreshStyle.up;
+        refreshButton = new Button(refreshStyle);
+        refreshButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gestureListener.reset();
+                event.cancel();
+            }
+        });
+    }
+
 	private TextureImage findRegion(String regionName) {
 		AtlasRegion region = atlas.findRegion(regionName);
 		if (region == null) {
@@ -161,9 +173,9 @@ public class PlankGame implements ApplicationListener {
 
 	@Override
 	public void resize(int width, int height) {
-        button.setPosition(
-                (width-button.getWidth())/2, 
-                (height-button.getHeight())/2);
+        refreshButton.setPosition(
+                refreshButton.getWidth() * 0.25f, 
+                (height-refreshButton.getHeight())/2);
 	}
 
 	@Override

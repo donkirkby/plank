@@ -3,6 +3,7 @@ package com.github.donkirkby.plank.view;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.junit.Test;
@@ -143,4 +144,26 @@ public class PieceViewTest {
 		assertThat("centre", newCentre, is(expectedCentre));
 	}
 
+    @Test
+    public void reset() {
+        // SETUP
+        Vector2 oldCentre = new Vector2(200, 100);
+        float radius = 10;
+        Vector2 target = new Vector2(210, 120);
+
+        Piece piece = new Piece(0, PieceColour.BLUE);
+        GameComponentView pieceView = 
+                new PieceView(piece, oldCentre, radius);
+        
+        // EXEC
+        pieceView.setDestinations(new ArrayList<PlankView>());
+
+        pieceView.dragTo(target);
+        pieceView.reset();
+        
+        Vector2 newCentre = pieceView.getCentre();
+        
+        // VERIFY
+        assertThat("centre", newCentre, is(oldCentre));
+    }
 }
