@@ -41,7 +41,8 @@ public class PlankGame implements ApplicationListener {
         Skin skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         atlas = new TextureAtlas(Gdx.files.internal("atlas/plank.pack"));
         
-        stage = new Stage();
+        boolean keepAspectRatio = true;
+        stage = new Stage(800, 480, keepAspectRatio);
 
         createRefreshButton(skin);
         stage.addActor(refreshButton);
@@ -49,7 +50,7 @@ public class PlankGame implements ApplicationListener {
 
         camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
-		gestureListener = new PlankGestureListener(camera);
+		gestureListener = new PlankGestureListener();
 		stage.addListener(gestureListener);
         
         batch = new SpriteBatch();
@@ -123,6 +124,9 @@ public class PlankGame implements ApplicationListener {
                 new TextureRegionDrawable(atlas.findRegion("images/refresh"));
         refreshStyle.down = refreshStyle.up;
         refreshButton = new Button(refreshStyle);
+        refreshButton.setPosition(
+                refreshButton.getWidth() * 0.25f, 
+                (stage.getCamera().viewportHeight-refreshButton.getHeight())/2);
         refreshButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -173,9 +177,6 @@ public class PlankGame implements ApplicationListener {
 
 	@Override
 	public void resize(int width, int height) {
-        refreshButton.setPosition(
-                refreshButton.getWidth() * 0.25f, 
-                (height-refreshButton.getHeight())/2);
 	}
 
 	@Override

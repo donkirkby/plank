@@ -8,19 +8,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.github.donkirkby.plank.model.Piece;
 import com.github.donkirkby.plank.model.PieceColour;
 import com.github.donkirkby.plank.model.Plank;
 
-@Ignore("Camera stuff was broken during switch to Scene2D. " +
-		"Waiting to complete switch.")
 public class PlankGestureListenerTest {
 
     @Test
@@ -50,8 +45,7 @@ public class PlankGestureListenerTest {
                 new PieceView(piece, oldPieceCentre, 10); // left position
         pieceView.setDestinations(destinations);
         
-        PlankGestureListener listener = 
-                new PlankGestureListener(new DummyCamera());
+        PlankGestureListener listener = new PlankGestureListener();
         listener.addView(pieceView);
         listener.addView(plankView);
         
@@ -110,8 +104,7 @@ public class PlankGestureListenerTest {
                 new PieceView(greenPiece, oldGreenCentre, 10); // left position
         greenPieceView.setDestinations(destinations);
         
-        PlankGestureListener listener = 
-                new PlankGestureListener(new DummyCamera());
+        PlankGestureListener listener = new PlankGestureListener();
         listener.addView(redPieceView);
         listener.addView(bluePieceView);
         listener.addView(greenPieceView);
@@ -205,8 +198,7 @@ public class PlankGestureListenerTest {
 				new PieceView(piece2, oldPiece2Centre, 10); // left position
 		piece2View.setDestinations(destinations);
 		
-        PlankGestureListener listener = 
-                new PlankGestureListener(new DummyCamera());
+        PlankGestureListener listener = new PlankGestureListener();
 		listener.addView(piece1View);
 		listener.addView(piece2View);
 		InputEvent event = null;
@@ -222,39 +214,6 @@ public class PlankGestureListenerTest {
 		assertThat("new piece 1 centre", newPiece1Centre, is(oldPiece1Centre));
 		assertThat("new piece 2 centre", newPiece2Centre, is(target2));
 	}
-
-	@Test
-    public void panWithProjection() {
-        // SETUP
-        Vector2 oldPieceCentre = new Vector2(100, 50);
-        float deltaX = 10;
-        float deltaY = 5;
-        Vector2 touch = new Vector2(1080, -450);
-        Vector2 target = touch.cpy().add(deltaX, deltaY);
-        Vector2 expectedCentre = new Vector2(80 + deltaX, 50 + deltaY);
-
-        List<PlankView> destinations = new ArrayList<PlankView>();
-        Piece piece = new Piece(0, PieceColour.RED);
-        PieceView pieceView = 
-                new PieceView(piece, oldPieceCentre, 10);
-        DummyCamera camera = new DummyCamera();
-        camera.offset = new Vector3(1000, -500, 0);
-        PlankGestureListener listener = 
-                new PlankGestureListener(camera);
-        pieceView.setDestinations(destinations);
-        
-        listener.addView(pieceView);
-        
-        InputEvent event = null;
-        
-        // EXEC
-        listener.touchDown(event, touch.x, touch.y, 0, 0);
-        listener.pan(event, target.x, target.y, deltaX, deltaY);
-        Vector2 newPieceCentre = pieceView.getCentre();
-        
-        // VERIFY
-        assertThat("new centre", newPieceCentre, is(expectedCentre));
-    }
 
     @Test
 	public void panToLine() {
@@ -276,8 +235,7 @@ public class PlankGestureListenerTest {
 		plankView.setLineHeight(lineHeight);
 		plankView.setDestinations(destinations);
 
-        PlankGestureListener listener = 
-                new PlankGestureListener(new DummyCamera());
+        PlankGestureListener listener = new PlankGestureListener();
 		listener.addView(plankView);
 		
 		InputEvent event = null;
@@ -324,8 +282,7 @@ public class PlankGestureListenerTest {
                 new PieceView(piece, oldPieceCentre, 10); // left position
         pieceView.setDestinations(destinations);
         
-        PlankGestureListener listener = 
-                new PlankGestureListener(new DummyCamera());
+        PlankGestureListener listener = new PlankGestureListener();
         listener.addView(pieceView);
         listener.addView(plankView);
         
@@ -363,8 +320,7 @@ public class PlankGestureListenerTest {
                 new PieceView(piece, oldPieceCentre, 10); // left position
         pieceView.setDestinations(destinations);
         
-        PlankGestureListener listener = 
-                new PlankGestureListener(new DummyCamera());
+        PlankGestureListener listener = new PlankGestureListener();
         listener.addView(pieceView);
         listener.addView(plankView);
         
@@ -377,37 +333,4 @@ public class PlankGestureListenerTest {
         // VERIFY
         assertThat("is plank flipped", isPlankFlipped, is(true));
     }
-	
-    /**
-     * Dummy camera that doesn't change a vector when it is projected or
-     * unprojected.
-     * If you want it to do something in project() and unproject(), set an 
-     * offset value.
-     * @author don
-     *
-     */
-    private class DummyCamera extends Camera {
-        // By default, do nothing
-        public Vector3 offset = new Vector3(0, 0, 0);
-        
-        @Override
-        public void project(Vector3 vec) {
-            vec.add(offset);
-        }
-        
-        @Override
-        public void unproject(Vector3 vec) {
-            vec.sub(offset);
-        }
-
-        @Override
-        public void update() {
-        }
-
-        @Override
-        public void update(boolean updateFrustum) {
-        }
-        
-    }
-
 }

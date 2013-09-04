@@ -3,9 +3,7 @@ package com.github.donkirkby.plank.view;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.github.donkirkby.plank.model.GameState;
@@ -23,20 +21,14 @@ public class PlankGestureListener extends ActorGestureListener {
     private List<GameComponentView> draggableViews = 
             new ArrayList<GameComponentView>();
 	private GameComponentView draggingView;
-    private Camera camera;
 	private GameState state = new GameState();
 	private PieceView[] winners = new PieceView[3];
 	private Piece[] winningPieces = new Piece[3];
 	
-    public PlankGestureListener(Camera camera) {
-        this.camera = camera;
-    }
-    
 	@Override
 	public void tap(InputEvent event, float x, float y, int count, int button) {
-	    Vector2 touchPos = calculateTouchPos(x, y);
-        GameComponentView tappedView = 
-	            GameComponentView.findClosest(touchPos, draggableViews);
+	    GameComponentView tappedView = 
+	            GameComponentView.findClosest(new Vector2(x, y), draggableViews);
         tappedView.tap();
 	}
 	
@@ -45,8 +37,7 @@ public class PlankGestureListener extends ActorGestureListener {
 		if (draggingView == null) {
 			return;
 		}
-		Vector2 touchPos = calculateTouchPos(x, y);
-		boolean isSnapped = draggingView.dragTo(touchPos);
+		boolean isSnapped = draggingView.dragTo(new Vector2(x, y));
 		if (isSnapped) {
 		    if (unplacedPlankViews.contains(draggingView)) {
 		        PlankView placedView = placedPlankViews.get(0);
@@ -80,18 +71,10 @@ public class PlankGestureListener extends ActorGestureListener {
 		}
 	}
 
-	private Vector2 calculateTouchPos(float x, float y) {
-        Vector3 touchPos3 = new Vector3();
-        touchPos3.set(x, y, 0);
-        camera.unproject(touchPos3);
-		Vector2 touchPos = new Vector2(touchPos3.x, camera.viewportHeight - touchPos3.y);
-		return touchPos;
-	}
-
 	@Override
 	public void touchDown(InputEvent event, float x, float y, int pointer, int button) {
 		draggingView = GameComponentView.findClosest(
-		        calculateTouchPos(x, y), 
+		        new Vector2(x, y), 
 		        draggableViews);
 	}
 
