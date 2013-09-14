@@ -46,10 +46,10 @@ public class PieceView extends GameComponentView {
 	@Override
 	public String toString() {
 	    Vector2 centre = getCentre();
-        return String.format(
-                "%s piece at %d,%d", 
-                piece.getColour().name().toLowerCase(), 
-                (int)centre.x, 
-                (int)centre.y);
+        return piece.getColour().name().toLowerCase() +
+                " piece at " +  
+                Integer.toString((int) centre.x) +
+                "," +
+                Integer.toString((int) centre.y);
 	}
 }
