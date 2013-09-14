@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 import org.junit.Before;
@@ -221,8 +220,6 @@ public class PieceViewTest {
         float deltaY = 20;
         PieceView pieceView = 
                 createPieceView(oldCentre);
-        List<String> expectedMovements = 
-                Arrays.asList("from 210, 120", "by -10, -20");
 
         // EXEC
         pieceView.setDestinations(new ArrayList<PlankView>());
