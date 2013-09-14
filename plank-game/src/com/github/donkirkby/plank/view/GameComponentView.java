@@ -3,54 +3,75 @@ package com.github.donkirkby.plank.view;
 import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 
 public abstract class GameComponentView {
 
-	private Vector2 centre;
-	private Vector2 startCentre;
-	private GameComponentImage image;
+    private Actor actor;
+	private Vector2 startPosition;
 	private List<PlankView> destinations;
 	
-	protected GameComponentView(Vector2 centre) {
-		this.centre = centre.cpy();
-		startCentre = centre.cpy();
-	}
-
-	/**
-	 * Get the position of this component's centre. Do not modify!
-	 */
-	public Vector2 getCentre() {
-		return centre;
+	protected GameComponentView(Actor actor) {
+	    this.actor = actor;
+        int halfTapSquareSize = 5;
+        float tapCountInterval = 0.4f;
+        float longPressDuration = 1.1f;
+        float maxFlingDelay = 0.15f;
+        actor.addListener(new ActorGestureListener(
+                halfTapSquareSize, 
+                tapCountInterval, 
+                longPressDuration, 
+                maxFlingDelay) {
+            @Override
+            public void pan(
+                    InputEvent event, 
+                    float x, 
+                    float y, 
+                    float deltaX,
+                    float deltaY) {
+                panBy(deltaX, deltaY);
+            }
+            
+            @Override
+            public void tap(InputEvent event, float x, float y, int count,
+                    int button) {
+                GameComponentView.this.tap();
+            }
+        });
 	}
 	
-	public void setCentre(Vector2 centre) {
-		this.centre.set(centre);
-	}
-	
-	public void setCentre(float x, float y) {
-		centre.set(x, y);
-	}
-	
-	public abstract float getBottom();
+    public void setCentre(float x, float y) {
+        actor.setPosition(
+                x - actor.getWidth()/2, 
+                y - actor.getHeight()/2);
+        if (startPosition == null) {
+            startPosition = new Vector2(actor.getX(), actor.getY());
+        }
+    }
+    
+    public void setCentre(Vector2 centre) {
+        setCentre(centre.x, centre.y);
+    }
+    
+    public Vector2 getCentre() {
+        return new Vector2(
+                actor.getX() + actor.getWidth()/2, 
+                actor.getY() + actor.getHeight()/2);
+    }
+    
+    public void panBy(float deltaX, float deltaY) {
+        actor.setPosition(actor.getX() + deltaX, actor.getY() + deltaY);
+    }
+    
+    public Actor getActor() {
+        return actor;
+    }
 
-	public abstract float getLeft();
-
-	public GameComponentImage getImage() {
-		return image;
-	}
-
-	public void setImage(GameComponentImage image) {
-		this.image = image;
-	}
-
-	/**
-	 * Drag a view to a position.
-	 * @param target the position to drag to
-	 * @return true if the view was snapped to a destination point.
-	 */
-	public abstract boolean dragTo(Vector2 target);
-
-	/**
+    /**
 	 * Set the list of plank views that this piece can be placed on. More
 	 * plank views can be added to the collection after this call.
 	 * @param destinations list of plank views that this piece can be placed on
@@ -63,38 +84,17 @@ public abstract class GameComponentView {
 		return destinations;
 	}
 
-	/**
-	 * Find the game component that is closest to a certain point.
-	 * @param point the point to compare to
-	 * @param components the list of components to search
-	 * @return the closest member of components, ties are broken by earlier
-	 * position in the list.
-	 */
-	public static GameComponentView findClosest(
-			Vector2 point,
-			Iterable<GameComponentView> components) {
-		GameComponentView closestComponent = null;
-		float shortestDistance2 = -1;
-		for (GameComponentView component : components) {
-			float distance2 = point.dst2(component.getCentre());
-			if (shortestDistance2 < 0 || distance2 <= shortestDistance2) {
-				shortestDistance2 = distance2;
-				closestComponent = component;
-			}
-		}
-		return closestComponent;
-	}
-
-    public void draw() {
-        image.draw(getLeft(), getBottom());
-    }
-
     public void tap() {
         // By default, do nothing.
     }
 
     public void reset() {
-        centre.set(startCentre);
+        if (startPosition != null) {
+            actor.addAction(Actions.moveBy(
+                    startPosition.x - actor.getX(), 
+                    startPosition.y - actor.getY(),
+                    0.5f));
+        }
     }
 
 }

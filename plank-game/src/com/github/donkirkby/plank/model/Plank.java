@@ -80,6 +80,9 @@ public class Plank {
 	}
 
     public void reset() {
+        if (isFlipped) {
+            flip();
+        }
         for (int i = 0; i < 3; i++) {
             pieces[i] = Piece.NULL_PIECE;
         }

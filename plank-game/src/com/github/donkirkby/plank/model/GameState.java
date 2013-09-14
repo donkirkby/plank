@@ -18,6 +18,7 @@ public class GameState {
      * winner.
      */
     public void findWin(Piece[] pieces) {
+        clearPieces(pieces);
         for (int plankIndex = 0; plankIndex < placedPlanks.size(); plankIndex++) {
             findPlankWin(placedPlanks.get(plankIndex), pieces);
             if (pieces[0] != Piece.NULL_PIECE) {

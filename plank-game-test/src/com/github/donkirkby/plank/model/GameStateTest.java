@@ -27,6 +27,7 @@ public class GameStateTest {
         GameState game = new GameState();
         game.getPlacedPlanks().add(plank1);
         Piece[] pieces = new Piece[3];
+        pieces[0] = player1Green; // make sure this is removed
         Piece[] expectedPieces = new Piece[] { 
                 Piece.NULL_PIECE, 
                 Piece.NULL_PIECE, 
@@ -34,6 +35,25 @@ public class GameStateTest {
         };
         
         plank1.add(player1Green);
+        
+        // EXEC
+        game.findWin(pieces);
+        
+        // VERIFY
+        assertThat("pieces", pieces, is(expectedPieces));
+    }
+
+    @Test
+    public void noPlanks() {
+        // SETUP
+        GameState game = new GameState();
+        Piece[] pieces = new Piece[3];
+        pieces[0] = player1Green; // make sure this is removed
+        Piece[] expectedPieces = new Piece[] { 
+                Piece.NULL_PIECE, 
+                Piece.NULL_PIECE, 
+                Piece.NULL_PIECE 
+        };
         
         // EXEC
         game.findWin(pieces);

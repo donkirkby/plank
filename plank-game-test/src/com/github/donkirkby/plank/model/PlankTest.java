@@ -75,6 +75,38 @@ public class PlankTest {
         assertThat("piece from plank", pieceFromPlank, is(Piece.NULL_PIECE));
     }
 
+    @Test
+    public void resetAdded() {
+        // SETUP
+        Piece piece = new Piece(0, PieceColour.GREEN);
+        Plank plank = 
+                new Plank(PieceColour.RED, PieceColour.GREEN, PieceColour.BLUE);
+        
+        // EXEC
+        plank.add(piece);
+        plank.reset();
+        Piece pieceFromPlank = plank.get(1);
+        
+        // VERIFY
+        assertThat("piece from plank", pieceFromPlank, is(Piece.NULL_PIECE));
+    }
+
+    @Test
+    public void resetFlipped() {
+        // SETUP
+        Piece redPiece = new Piece(0, PieceColour.RED);
+        Plank plank = 
+                new Plank(PieceColour.RED, PieceColour.GREEN, PieceColour.BLUE);
+        
+        // EXEC
+        plank.flip();
+        plank.reset();
+        int redIndex = plank.indexOf(redPiece);
+        
+        // VERIFY
+        assertThat("index", redIndex, is(0));
+    }
+
 	@Test
 	public void isMatch() {
 		// SETUP
