@@ -2,3 +2,9 @@ d:war/
 d:atlas
 t:atlas/plank.pack
 i:atlas/plank.png
+d:ui
+t:ui/uiskin.json
+i:ui/uiskin.png
+i:ui/default.png
+t:ui/default.fnt
+b:ui/uiskin.atlas
