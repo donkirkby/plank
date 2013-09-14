@@ -16,10 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.badlogic.gdx.scenes.scene2d.actions.RotateByAction;
-import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.utils.Array;
 import com.github.donkirkby.plank.model.Piece;
@@ -216,19 +212,19 @@ public class PlankViewTest {
         int button = random.nextInt();
         InputEvent event = null;
         Plank plank = plankView.getPlank();
-        List<String> expectedRotations = Arrays.asList("from 0", "by 180");
         
         // EXEC
         boolean defaultPlankFlip = plank.isFlipped();
         ((ActorGestureListener)listeners.get(0)).tap(event, x, y, count, button);
         boolean isPlankFlipped = plank.isFlipped();
         Vector2 newCentre = plankView.getCentre();
+        completeActions(plankView);
         
         // VERIFY
         assertThat("centre", newCentre, is(oldCentre));
         assertThat("plank flipped by default", defaultPlankFlip, is(false));
         assertThat("plank flipped after", isPlankFlipped, is(true));
-        assertThat("rotations", getRotations(plankView), is(expectedRotations));
+        assertThat("rotation", plankView.getActor().getRotation(), is(180f));
 	}
 
     @Test
@@ -253,8 +249,6 @@ public class PlankViewTest {
                 PieceColour.RED, 
                 PieceColour.BLUE, 
                 PieceColour.GREEN);
-        List<String> expectedMovements = 
-                Arrays.asList("from 300, 100", "by -50, -50");
         
         // EXEC
         plankView.panBy(
@@ -264,10 +258,11 @@ public class PlankViewTest {
         pieceView.panBy(target.x - oldCentre.x, target.y - oldCentre.y);
         plankView.reset();
         Piece addedPiece = plankView.getPlank().get(1);
+        completeActions(plankView);
         
         // VERIFY
         assertThat("added piece", addedPiece, is(Piece.NULL_PIECE));
-        assertThat("movements", getMovements(plankView), is(expectedMovements));
+        assertThat("centre", plankView.getCentre(), is(oldPlankCentre));
     }
 
     @Test
@@ -275,65 +270,29 @@ public class PlankViewTest {
         // SETUP
         Vector2 centre = new Vector2(100, 50);
         PlankView plankView = createPlankView(centre);
-        List<String> expectedRotations = 
-                Arrays.asList("from 0", "by 180", "to 0");
         
         // EXEC
         plankView.tap();
         plankView.reset();
         boolean isFlipped = plankView.getPlank().isFlipped();
-        
+        completeActions(plankView);
         // VERIFY
         assertThat("is flipped", isFlipped, is(false));
-        assertThat("rotations", getRotations(plankView), is(expectedRotations));
+        assertThat("rotation", plankView.getActor().getRotation(), is(0f));
     }
     
-    private List<String> getRotations(GameComponentView view) {
-        List<String> rotations = new ArrayList<String>();
+    public static void completeActions(GameComponentView view) {
         Actor actor = view.getActor();
-        rotations.add(String.format("from %d", (int)actor.getRotation()));
         Array<Action> actions = actor.getActions();
         for (Action action : actions) {
-            if (action instanceof RotateByAction) {
-                RotateByAction rotateByAction = (RotateByAction) action;
-                rotations.add(String.format(
-                        "by %d", 
-                        (int)rotateByAction.getAmount()));
-            }
-            else if (action instanceof RotateToAction) {
-                RotateToAction rotateToAction = (RotateToAction) action;
-                rotations.add(String.format(
-                        "to %d", 
-                        (int)rotateToAction.getRotation()));
+            while ( ! action.act(1000)) {
+                // wait for action to complete
             }
         }
-        return rotations;
-    }
-    
-    public static List<String> getMovements(GameComponentView view) {
-        List<String> movements = new ArrayList<String>();
+        actor.clearActions();
+        // Avoid rounding errors by assuming all positions are integers.
         Vector2 centre = view.getCentre();
-        movements.add(String.format(
-                "from %d, %d", 
-                (int)centre.x,
-                (int)centre.y));
-        Array<Action> actions = view.getActor().getActions();
-        for (Action action : actions) {
-            if (action instanceof MoveByAction) {
-                MoveByAction moveByAction = (MoveByAction) action;
-                movements.add(String.format(
-                        "by %d, %d", 
-                        (int)moveByAction.getAmountX(),
-                        (int)moveByAction.getAmountY()));
-            }
-            else if (action instanceof MoveToAction) {
-                    MoveToAction moveToAction = (MoveToAction) action;
-                    movements.add(String.format(
-                            "to %d, %d", 
-                            (int)moveToAction.getX(),
-                            (int)moveToAction.getY()));
-                }
-        }
-        return movements;
+        centre.set(Math.round(centre.x), Math.round(centre.y));
+        view.setCentre(centre);
     }
 }

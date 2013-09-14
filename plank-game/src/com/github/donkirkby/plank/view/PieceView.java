@@ -38,6 +38,12 @@ public class PieceView extends GameComponentView {
 		}
 		setCentre(target);
 	}
+	
+	@Override
+	public void reset() {
+	    super.reset();
+	    target = null;
+	}
 
 	public Piece getPiece() {
 		return piece;

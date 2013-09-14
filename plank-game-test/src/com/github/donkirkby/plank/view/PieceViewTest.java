@@ -229,12 +229,38 @@ public class PieceViewTest {
         
         pieceView.panBy(deltaX, deltaY);
         pieceView.reset();
+        PlankViewTest.completeActions(pieceView);
         
         // VERIFY
         assertThat(
-                "movements", 
-                PlankViewTest.getMovements(pieceView), 
-                is(expectedMovements));
+                "centre",
+                pieceView.getCentre(),
+                is(oldCentre));
+    }
+
+    @Test
+    public void panAfterReset() {
+        // SETUP
+        Vector2 oldCentre = new Vector2(200, 100);
+        Vector2 target = new Vector2(210, 120);
+        float deltaX = target.x - oldCentre.x;
+        float deltaY = target.y - oldCentre.y;
+        PieceView pieceView = 
+                createPieceView(oldCentre);
+
+        // EXEC
+        pieceView.setDestinations(new ArrayList<PlankView>());
+        
+        pieceView.panBy(deltaX, deltaY);
+        pieceView.reset();
+        PlankViewTest.completeActions(pieceView);
+        pieceView.panBy(deltaX, deltaY);
+        
+        // VERIFY
+        assertThat(
+                "centre",
+                pieceView.getCentre(),
+                is(target));
     }
 
     @Test

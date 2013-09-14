@@ -3,8 +3,6 @@ package com.github.donkirkby.plank.view;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 import org.junit.Before;
@@ -42,27 +40,24 @@ public class ViewStateTest {
         viewState.addView(pieceView);
         viewState.addView(plankView);
 
-        List<String> expectedPieceMovements = 
-                Arrays.asList("from 110, 300", "by -10, -250");
-        List<String> expectedPlankMovements = 
-                Arrays.asList("from 210, 300", "by -10, -250");
-        
         // EXEC
         pieceView.panBy(deltaX, deltaY);
         plankView.panBy(deltaX, deltaY);
         int placedBeforeReset = viewState.getPlacedPlankViews().size();
         viewState.reset();
         int placedAfterReset = viewState.getPlacedPlankViews().size();
+        PlankViewTest.completeActions(pieceView);
+        PlankViewTest.completeActions(plankView);
         
         // VERIFY
         assertThat(
-                "piece movements", 
-                PlankViewTest.getMovements(pieceView), 
-                is(expectedPieceMovements));
+                "piece centre",
+                pieceView.getCentre(),
+                is(oldPieceCentre));
         assertThat(
-                "plank movements", 
-                PlankViewTest.getMovements(plankView), 
-                is(expectedPlankMovements));
+                "plank centre",
+                plankView.getCentre(),
+                is(oldPlankCentre));
         assertThat(
                 "placed planks before reset", 
                 placedBeforeReset, 
